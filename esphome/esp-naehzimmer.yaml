@@ -1,0 +1,39 @@
+esphome:
+  name: esp-naehzimmer
+
+esp8266:
+  board: nodemcuv2
+
+# Tempratur/humidity sensor DHT22
+sensor:
+  - platform: dht
+    pin: D4
+    model: DHT22
+    temperature:
+      name: "Temperatur"
+    humidity:
+      name: "Luftfeuchtigkeit"
+    update_interval: 30s
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: "X67s7rumln2f+Y+wEz34lGOOcxOkCHtukEE/KBlNc+g="
+
+ota:
+  password: "a3f12a028510fb62f968eefbabe33ce0"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp-Naehzimmer Fallback Hotspot"
+    password: "4o1STxX5p8jH"
+
+captive_portal:
+    
