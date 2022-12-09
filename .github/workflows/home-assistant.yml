@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out configuration from GitHub
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Run yamllint
-        uses: frenck/action-yamllint@master
+        uses: frenck/action-yamllint@main
 
   home-assistant:
     name: "Home Assistant Core ${{ matrix.version }} Configuration Check"
@@ -27,9 +27,9 @@ jobs:
         version: ["stable", "beta", "dev"]
     steps:
       - name: Check out configuration from GitHub
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Run Home Assistant Configuration Check
-        uses: frenck/action-home-assistant@master
+        uses: frenck/action-home-assistant@main
         with:
           path: "."
           secrets: ./secrets.yaml.default
@@ -41,9 +41,9 @@ jobs:
     needs: [yamllint]
     steps:
       - name: Check out configuration from GitHub
-        uses: actions/checkout@master
+        uses: actions/checkout@main
       - name: Set up Python 3.7
-        uses: actions/setup-python@master
+        uses: actions/setup-python@main
         with:
           python-version: 3.7
       - name: Install dependencies
