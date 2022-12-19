@@ -1,10 +1,11 @@
+---
 - id: '1661697127963'
   alias: Bewegung im Windfang
   description: ''
   trigger:
   - platform: state
     entity_id: binary_sensor.bewegungsmelder_windfang_motion
-    to: true
+    to: 'on'
   condition: []
   action:
   - if:
@@ -22,7 +23,7 @@
       - if:
         - condition: state
           entity_id: scene.windfang_hell
-          state: false
+          state: 'off'
         then:
         - stop: ''
       else:
@@ -38,7 +39,7 @@
   - wait_for_trigger:
     - platform: state
       entity_id: binary_sensor.bewegungsmelder_windfang_motion
-      to: false
+      to: 'off'
   - delay:
       seconds: 15
   - type: turn_off
@@ -64,7 +65,7 @@
     domain: light
   mode: single
 - id: '1670770545594'
-  alias: Weihnachtsmodus v2
+  alias: Weihnachtsmodus
   description: ''
   trigger: []
   condition: []
