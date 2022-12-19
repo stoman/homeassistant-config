@@ -1,16 +1,15 @@
+---
 - id: '1661697127963'
   alias: Bewegung im Windfang
   description: ''
   trigger:
   - platform: state
-    entity_id:
-    - binary_sensor.bewegungsmelder_windfang_motion
+    entity_id: binary_sensor.bewegungsmelder_windfang_motion
     to: 'on'
   condition: []
   action:
   - if:
-    - condition: and
-      conditions:
+    - and:
       - condition: sun
         after: sunrise
       - condition: sun
@@ -39,8 +38,7 @@
       metadata: {}
   - wait_for_trigger:
     - platform: state
-      entity_id:
-      - binary_sensor.bewegungsmelder_windfang_motion
+      entity_id: binary_sensor.bewegungsmelder_windfang_motion
       to: 'off'
   - delay:
       seconds: 15
@@ -65,4 +63,27 @@
     device_id: cbc147ee93850260004f81ccdda186ee
     entity_id: light.lampe_schlafzimmer
     domain: light
+  mode: single
+- id: '1670770545594'
+  alias: Weihnachtsmodus
+  description: ''
+  trigger: []
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.erdgeschoss_weihnachten
+    metadata: {}
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.spotify_stefan
+    data:
+      media_content_id: https://open.spotify.com/playlist/37i9dQZF1DX3h1vasAdBTc?si=bolZs2G9RdmpxYTRMy60cg
+      media_content_type: playlist
+    metadata: {}
+  - service: media_player.select_source
+    data:
+      source: Wohnzimmer
+    target:
+      entity_id: media_player.spotify_stefan
   mode: single
