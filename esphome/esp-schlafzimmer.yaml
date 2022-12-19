@@ -1,6 +1,7 @@
 ---
 esphome:
   name: esp-schlafzimmer
+  compile_process_limit: 1
 
 esp8266:
   board: nodemcuv2
@@ -22,10 +23,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "/sGm0zLRq3IAt1jWkWaF81R6aM2J26Y6R6PZ4n7uWpU="
+    key: !secret schlafzimmer_api_key
 
 ota:
-  password: "f0db88210f8e198d057cba70a46af9c5"
+  password: !secret schlafzimmer_ota_password
 
 wifi:
   ssid: !secret wifi_ssid
@@ -34,7 +35,6 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Esp-Schlafzimmer"
-    password: "QtWgBhiPc77L"
+    password: !secret schlafzimmer_wifi_fallback_password
 
 captive_portal:
-    

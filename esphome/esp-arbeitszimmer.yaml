@@ -1,6 +1,7 @@
 ---
 esphome:
   name: "esp-arbeitszimmer"
+  compile_process_limit: 1
 
 esp8266:
   board: nodemcuv2
@@ -22,10 +23,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "A9EgNX09Pet1wr6ax97FklxxE7ElDgWrzVd+AVmTRN8="
+    key: !secret arbeitszimmer_api_key
 
 ota:
-  password: "9cbd44a78562e4b1f43d73b1f06b11be"
+  password: !secret arbeitszimmer_ota_password
 
 wifi:
   ssid: !secret wifi_ssid
@@ -34,7 +35,6 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Arbeitszimmer Fallback Hotspot"
-    password: "HmhUkf6Z3PLd"
+    password: !secret arbeitszimmer_wifi_fallback_password
 
 captive_portal:
-    

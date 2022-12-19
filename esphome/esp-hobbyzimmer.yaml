@@ -1,6 +1,7 @@
 ---
 esphome:
   name: esp-hobbyzimmer
+  compile_process_limit: 1
 
 esp8266:
   board: nodemcuv2
@@ -22,10 +23,10 @@ logger:
 # Enable Home Assistant API
 api:
   encryption:
-    key: "TRvHbpqTj1YN+GtNJ+AiiV9wxSY+kc+JMM9RNrOlEwc="
+    key: !secret hobbyzimmer_api_key
 
 ota:
-  password: "e7d0a19a37db2145dfbeb780cde8bd2d"
+  password: !secret hobbyzimmer_ota_password
 
 wifi:
   ssid: !secret wifi_ssid
@@ -34,7 +35,6 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "Esp-Hobbyzimmer Fallback Hotspot"
-    password: "2CzN7Zz4OQtc"
+    password: !secret hobbyzimmer_wifi_fallback_password
 
 captive_portal:
-    
