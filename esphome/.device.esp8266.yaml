@@ -1,0 +1,7 @@
+---
+# ESP8266 NodeMCU board
+packages:
+  common: !include .device.common.yaml
+
+esp8266:
+  board: nodemcuv2

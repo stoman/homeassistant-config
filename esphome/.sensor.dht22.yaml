@@ -1,0 +1,15 @@
+---
+# Temperature/humidity sensor DHT22
+substitutions:
+  dht22_pin: D4
+
+sensor:
+  - platform: dht
+    pin: ${dht22_pin}
+    model: DHT22
+    temperature:
+      name: "${prefix} Temperatur"
+    humidity:
+      name: "${prefix} Luftfeuchtigkeit"
+    update_interval: 30s
+
