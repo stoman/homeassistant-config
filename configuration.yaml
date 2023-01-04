@@ -6,6 +6,11 @@ default_config:
 tts:
   - platform: google_translate
 
+# Data recording
+recorder:
+  # Commit only every 30 seconds to save the sd card of the raspberrz pi
+  commit_interval: 0
+
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
