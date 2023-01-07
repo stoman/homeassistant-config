@@ -29,3 +29,18 @@ wifi:
 
 captive_portal:
 
+sensor:
+  - platform: wifi_signal
+    name: "${name} WLAN"
+    id: sensor_wifi
+    update_interval: 30s
+
+  - platform: copy
+    source_id: sensor_wifi
+    filters:
+      - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+    name: "${name} WLAN Empfang"
+    unit_of_measurement: "%"
+
+  - platform: uptime
+    name: "${name} Uptime"
