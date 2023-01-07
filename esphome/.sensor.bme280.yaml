@@ -1,0 +1,22 @@
+---
+# Temperature/humidity/pressure sensor BME280
+substitutions:
+  bme280_sda: GPIO21
+  bme280_scl: GPIO22
+
+i2c:
+  sda: ${bme280_sda}
+  scl: ${bme280_scl}
+  scan: true
+
+sensor:
+  - platform: bme280
+    temperature:
+      name: "${prefix} Temperatur"
+      oversampling: 16x
+    pressure:
+      name: "${prefix} Luftdruck"
+    humidity:
+      name: "${prefix} Luftfeuchtigkeit"
+    address: 0x77
+    update_interval: 30s

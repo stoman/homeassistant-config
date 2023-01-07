@@ -1,0 +1,7 @@
+---
+# ESP32 NodeMCU board
+packages:
+  common: !include .device.common.yaml
+
+esp32:
+  board: az-delivery-devkit-v4
