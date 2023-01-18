@@ -8,9 +8,12 @@ tts:
 
 # Data recording
 recorder:
-  # Commit only every 30 seconds to save the sd card of the raspberrz pi
-  commit_interval: 0
+  # Commit only every 30 seconds to save the sd card of the raspberry pi
+  commit_interval: 30
 
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+
+homeassistant:
+  packages: !include_dir_named packages

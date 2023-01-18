@@ -1,0 +1,32 @@
+---
+waste_collection_schedule:
+  sources:
+    - name: ics
+      args:
+        url: !secret awm_calendar
+        version: 1
+        split_at: ", "
+        regex: '(.*), [^,]*str\..*'
+
+sensor:
+  - platform: waste_collection_schedule
+    name: wcs_restmuelltonne
+    types:
+      - "Restmülltonne"
+    details_format: "upcoming"
+    add_days_to: true
+    value_template: "{% if value.daysTo == 0 %}heute{% elif value.daysTo == 1 %}morgen{% else %}in {{value.daysTo}} Tagen{% endif %}"
+  - platform: waste_collection_schedule
+    name: wcs_papiertonne
+    types:
+      - "Papiertonne"
+    details_format: "upcoming"
+    add_days_to: true
+    value_template: "{% if value.daysTo == 0 %}heute{% elif value.daysTo == 1 %}morgen{% else %}in {{value.daysTo}} Tagen{% endif %}"
+  - platform: waste_collection_schedule
+    name: wcs_biotonne
+    types:
+      - "Biotonne"
+    details_format: "upcoming"
+    add_days_to: true
+    value_template: "{% if value.daysTo == 0 %}heute{% elif value.daysTo == 1 %}morgen{% else %}in {{value.daysTo}} Tagen{% endif %}"
