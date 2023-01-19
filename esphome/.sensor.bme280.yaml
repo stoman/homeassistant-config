@@ -18,5 +18,5 @@ sensor:
       name: "${prefix} Luftdruck"
     humidity:
       name: "${prefix} Luftfeuchtigkeit"
-    address: 0x77
+    address: 0x76
     update_interval: 30s
