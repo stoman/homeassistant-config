@@ -1,4 +1,3 @@
 .storage
-custom_components
 home-assistant*
 secrets.yaml
