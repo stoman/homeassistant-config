@@ -1,8 +1,13 @@
 # Stefan's Home Assistant Configuration
 
-[![License][license-shield]](LICENSE.md)
+[![Build status](https://github.com/stoman/homeassistant-config/actions/workflows/home-assistant.yml/badge.svg)](https://github.com/stoman/homeassistant-config/actions/)
+[![MIT license](https://img.shields.io/github/license/stoman/homeassistant-config.svg)](LICENSE.md)
+[![GitHub commits](https://badgen.net/github/commits/stoman/homeassistant-config)](https://github.com/stoman/homeassistant-config/commit/)
+[![GitHub stars](https://img.shields.io/github/stars/stoman/homeassistant-config.svg)](https://github.com/stoman/homeassistant-config/stargazers/)
 
-This repository contains our configuration for [Home Assistant](https://github.com/home-assistant). It's a collection of small scripts and fun automations for tinkering around and fun. Maybe something can be a useful inspiration for others.
+This repository contains our configuration for [Home Assistant](https://github.com/home-assistant). It's a collection of small scripts and fun automations for tinkering around and fun.
+
+I hope something can be a useful inspiration for others. If you find this useful, please consider starring this repository: [![GitHub stars](https://img.shields.io/github/stars/stoman/homeassistant-config.svg?style=social)](https://github.com/stoman/homeassistant-config/stargazers/)
 
 ## Highlights
 
