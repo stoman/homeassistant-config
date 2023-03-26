@@ -11,5 +11,9 @@ sensor:
       name: "${prefix} Temperatur"
     humidity:
       name: "${prefix} Luftfeuchtigkeit"
+      filters:
+      - calibrate_linear:
+        - 0.0 -> 0.0
+        - 59.5 -> 45.0
     update_interval: 30s
 
