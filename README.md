@@ -14,12 +14,13 @@ I hope something can be a useful inspiration for others. If you find this useful
 - Christmas switch: a lightswitch at home with a Christmas tree icon from the plotter dims the lights, switches on the Christmas tree lights, and plays Christmas music on Spotify.
 - Temperature and humidity sensors for ESP devices: [BME280](esphome/.sensor.bme280.yaml), [DHT22](esphome/.sensor.dht22.yaml)
 - [Waste collection schedule from Abfallwirtschaftsbetrieb München (AWM)](packages/waste_collection_schedule.yaml)
+- [IKEA Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
 
 ## Hardware
 
 Devices we collected at home include:
 
-- Raspberry Pi 3B running Home Assistant
+- MiniAir 11 running Home Assistant
 - FritzBox and Fritz Repeater for Mesh WiFi
 - Philipps Hue lights: Centris, Infuse, Ensis, play gradient lightstrips, lightstrips, light bulbs
 - Philipps Hue Bridges
@@ -33,6 +34,7 @@ Devices we collected at home include:
 - [ESP8266](esphome/.device.esp8266.yaml) boards with [DHT22](esphome/.sensor.dht22.yaml) sensors
 - Roborock S7 Plus
 - [Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
+- Raspberry Pi 3B running Pi-hole
 
 ## Naming
 
