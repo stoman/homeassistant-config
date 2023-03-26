@@ -2,6 +2,13 @@
   "config": {
     "step": {
       "user": {
+        "description": "Wählen Sie eine Authentifizierungsmethode",
+        "menu_options": {
+          "code": "Login mit E-mail Einmalpasswort",
+          "password": "Login mit Passwort"
+        }
+      },
+      "email": {
         "description": "Deine Zugangsdaten",
         "data": {
           "username": "Benutzername"
@@ -12,6 +19,12 @@
         "data": {
           "code": "Verifizierungscode"
         }
+      },
+      "password": {
+        "description": "Gib dein Passwort ein",
+        "data": {
+          "password": "Passwort"
+        }
       }
     },
     "error": {
@@ -19,19 +32,21 @@
       "auth": "Login fehlgeschlagen. Prüfe deine Zugangsdaten"
     },
     "abort": {
-      "already_configured": "Device is already configured"
+      "already_configured": "Account ist bereits konfiguriert",
+      "already_in_progress": "Konfiguration des Accounts läuft bereits"
     }
   },
   "options": {
     "step": {
       "user": {
-        "description": "Select a platform to configure",
-        "data": {
-          "platform": "Platform"
+        "description": "Wähle die zu konfigurierende Plattform aus",
+        "menu_options": {
+          "vacuum": "Staubsauger",
+          "camera": "Kamera"
         }
       },
       "camera": {
-        "description": "Camera Options",
+        "description": "Kamera Optionen",
         "data": {
           "map_transformation.scale": "Kartengröße",
           "map_transformation.rotate": "Kartendrehung",
@@ -42,9 +57,9 @@
         }
       },
       "vacuum": {
-        "description": "Vacuum options",
+        "description": "Staubsauger Optionen",
         "data": {
-          "include_shared": "Include shared devices"
+          "include_shared": "Gemeinsam genutzte Geräte einbeziehen"
         }
       }
     }

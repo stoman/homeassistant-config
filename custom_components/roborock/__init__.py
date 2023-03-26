@@ -2,44 +2,57 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 from datetime import timedelta
+import logging
+from typing import Any
+
+from roborock.api import RoborockClient, RoborockMqttClient
+from roborock.containers import MultiMapsList, UserData, HomeDataProduct
+from roborock.exceptions import RoborockException, RoborockTimeout
+from roborock.typing import RoborockDeviceInfo, RoborockDeviceProp
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_STATE
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.translation import async_get_translations
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
-from .api.api import RoborockClient, RoborockMqttClient
-from .api.containers import UserData, MultiMapsList
-from .api.exceptions import RoborockException, RoborockTimeout
-from .api.typing import RoborockDeviceInfo, RoborockDeviceProp
-from .const import CONF_ENTRY_USERNAME, CONF_USER_DATA, CONF_BASE_URL, SENSOR, CONF_INCLUDE_SHARED, VACUUM
-from .const import DOMAIN, PLATFORMS
-from .utils import set_nested_dict, get_nested_dict
+from .const import (
+    CONF_BASE_URL,
+    CONF_ENTRY_USERNAME,
+    CONF_INCLUDE_SHARED,
+    CONF_USER_DATA,
+    DOMAIN,
+    PLATFORMS,
+    SENSOR,
+    VACUUM,
+)
+from .utils import get_nested_dict, set_nested_dict
 
 SCAN_INTERVAL = timedelta(seconds=30)
 
 _LOGGER = logging.getLogger(__name__)
 
 
-async def get_translation_from_hass(hass: HomeAssistant, language: str):
+async def get_translation_from_hass(
+    hass: HomeAssistant, language: str
+) -> dict[str, Any]:
     """Get translation from hass."""
-    entity_translations = await async_get_translations(hass, language, "entity", [DOMAIN])
+    entity_translations = await async_get_translations(hass, language, "entity", tuple([DOMAIN]))
     if not entity_translations:
         return {}
-    data = {}
+    data: dict[str, Any] = {}
     for key, value in entity_translations.items():
         set_nested_dict(data, key, value)
-    states_translation = get_nested_dict(data, f"component.{DOMAIN}.entity.{SENSOR}.roborock_vacuum.{ATTR_STATE}", {})
+    states_translation = get_nested_dict(
+        data, f"component.{DOMAIN}.entity.{SENSOR}", {}
+    )
     return states_translation
 
 
-async def get_translation(hass: HomeAssistant):
+async def get_translation(hass: HomeAssistant) -> dict[str, Any]:
     """Get translation."""
-    if hasattr(hass.config, 'language'):
+    if hasattr(hass.config, "language"):
         language = hass.config.language
         translation = await get_translation_from_hass(hass, language)
         if translation:
@@ -60,11 +73,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     base_url = entry.data.get(CONF_BASE_URL)
     username = entry.data.get(CONF_ENTRY_USERNAME)
     vacuum_options = entry.options.get(VACUUM)
-    include_shared = vacuum_options.get(CONF_INCLUDE_SHARED) if vacuum_options else False
+    include_shared = (
+        vacuum_options.get(CONF_INCLUDE_SHARED) if vacuum_options else False
+    )
     api_client = RoborockClient(username, base_url)
     _LOGGER.debug("Getting home data")
     home_data = await api_client.get_home_data(user_data)
-    _LOGGER.debug("Got home data %s", home_data.data)
+    _LOGGER.debug("Got home data %s", home_data)
 
     device_map: dict[str, RoborockDeviceInfo] = {}
     devices = (
@@ -75,7 +90,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     for device in devices:
         product = next(
             (
-                product
+                HomeDataProduct(product)
                 for product in home_data.products
                 if product.id == device.product_id
             ),
@@ -115,59 +130,58 @@ class RoborockDataUpdateCoordinator(
     ACCEPTABLE_NUMBER_OF_TIMEOUTS = 3
 
     def __init__(
-            self, hass: HomeAssistant, client: RoborockMqttClient, translation: dict
+        self, hass: HomeAssistant, client: RoborockMqttClient, translation: dict
     ) -> None:
         """Initialize."""
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
         self.api = client
-        self.platforms = []
+        self.platforms: list[str] = []
         self._devices_prop: dict[str, RoborockDeviceProp] = {}
         self.translation = translation
         self.devices_maps: dict[str, MultiMapsList] = {}
-        self.retries = int(self.ACCEPTABLE_NUMBER_OF_TIMEOUTS)
         self._timeout_countdown = int(self.ACCEPTABLE_NUMBER_OF_TIMEOUTS)
 
-    def release(self):
+    async def release(self) -> None:
         """Disconnect from API."""
-        self.api.release()
+        await self.api.async_disconnect()
 
-    async def _get_device_multi_maps_list(self, device_id: str):
+    async def _get_device_multi_maps_list(self, device_id: str) -> None:
         """Get multi maps list."""
         multi_maps_list = await self.api.get_multi_maps_list(device_id)
         if multi_maps_list:
             self.devices_maps[device_id] = multi_maps_list
 
-    async def _get_device_prop(self, device_id: str):
+    async def _get_device_prop(self, device_id: str) -> None:
         """Get device properties."""
         device_prop = await self.api.get_prop(device_id)
-        if device_id in self._devices_prop:
-            self._devices_prop[device_id].update(device_prop)
-        else:
-            self._devices_prop[device_id] = device_prop
+        if device_prop:
+            if device_id in self._devices_prop:
+                self._devices_prop[device_id].update(device_prop)
+            else:
+                self._devices_prop[device_id] = device_prop
 
-    async def _async_update_data(self):
+    async def _async_update_data(self) -> dict[str, RoborockDeviceProp]:
         """Update data via library."""
+        self._timeout_countdown = int(self.ACCEPTABLE_NUMBER_OF_TIMEOUTS)
         try:
-            funcs = []
             for device_id, _ in self.api.device_map.items():
                 if not self.devices_maps.get(device_id):
-                    funcs.append(self._get_device_multi_maps_list(device_id))
-                funcs.append(self._get_device_prop(device_id))
-            await asyncio.gather(*funcs)
-            self._timeout_countdown = int(self.ACCEPTABLE_NUMBER_OF_TIMEOUTS)
-        except (RoborockTimeout, RoborockException) as ex:
-            if self._timeout_countdown > 0:
-                _LOGGER.debug("Timeout updating coordinator. Acceptable timeouts countdown = %s",
-                              self._timeout_countdown)
+                    await self._get_device_multi_maps_list(device_id)
+                await self._get_device_prop(device_id)
+        except RoborockTimeout as ex:
+            if self._devices_prop and self._timeout_countdown > 0:
+                _LOGGER.debug(
+                    "Timeout updating coordinator. Acceptable timeouts countdown = %s",
+                    self._timeout_countdown,
+                )
                 self._timeout_countdown -= 1
             else:
                 raise UpdateFailed(ex) from ex
+        except RoborockException as ex:
+            raise UpdateFailed(ex) from ex
         if self._devices_prop:
             return self._devices_prop
-        # Only for the first attempt
-        if self.retries > 0:
-            self.retries -= 1
-            return await self._async_update_data()
+        raise UpdateFailed("No device props found")
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
@@ -184,7 +198,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     )
     if unloaded:
         hass.data[DOMAIN].pop(entry.entry_id)
-        coordinator.release()
+        await coordinator.release()
 
     return unloaded
 

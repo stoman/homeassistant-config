@@ -8,7 +8,9 @@ TITLE = "Wiltshire Council"
 DESCRIPTION = "Source for wiltshire.gov.uk services for Wiltshire Council"
 URL = "https://wiltshire.gov.uk"
 TEST_CASES = {
-    "house_uprn": {"uprn": "100121085972", "postcode": "BA149QP"},
+    "standard_uprn": {"uprn": "100121085972", "postcode": "BA149QP"},
+    "short_uprn": {"uprn": "10093279003", "postcode": "SN128FF"},
+    "padded_uprn": {"uprn": "010093279003", "postcode": "SN128FF"},
 }
 
 SEARCH_URLS = {
@@ -19,6 +21,12 @@ COLLECTIONS = {
     "Mixed dry recycling (blue lidded bin)",  # some addresses may not have a black box collection
     "Mixed dry recycling (blue lidded bin) and glass (black box or basket)",
     "Chargeable garden waste",  # some addresses also have a chargeable garden waste collection
+}
+ICON_MAP = {
+    "Household waste": "mdi:trash-can",
+    "Mixed dry recycling (blue lidded bin)": "mdi:recycle",
+    "Mixed dry recycling (blue lidded bin) and glass (black box or basket)": "mdi:recycle",
+    "Chargeable garden waste": "mdi:leaf",
 }
 
 
@@ -32,9 +40,9 @@ def add_month(date_):
 
 class Source:
     def __init__(
-        self, uprn=None, postcode=None, housenumberorname=None
+        self, uprn=None, postcode=None
     ):  # argX correspond to the args dict in the source configuration
-        self._uprn = uprn
+        self._uprn = str(uprn).zfill(12)  # pad uprn to 12 characters
         self._postcode = postcode
 
     def fetch(self):
@@ -69,6 +77,7 @@ class Source:
                             tag["data-original-datetext"], "%A %d %B, %Y"
                         ).date(),
                         collection,
+                        icon=ICON_MAP.get(collection),
                     )
                 )
         return entries

@@ -20,8 +20,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import dt as dt_util, slugify
 
 from . import DOMAIN, RoborockDataUpdateCoordinator
-from .api.containers import CleanRecordField, StatusField, CleanSummaryField, ConsumableField, DNDTimerField
-from .api.typing import RoborockDeviceInfo, RoborockDevicePropField
+from roborock.containers import CleanRecordField, StatusField, CleanSummaryField, ConsumableField, DNDTimerField
+from roborock.typing import RoborockDeviceInfo, RoborockDevicePropField
 from .const import (
     MAIN_BRUSH_REPLACE_TIME,
     SIDE_BRUSH_REPLACE_TIME,
@@ -123,6 +123,7 @@ VACUUM_SENSORS = {
         icon="mdi:alert",
         translation_key="roborock_vacuum",
         translation_attr="state",
+        attributes=tuple([StatusField.ERROR_CODE]),
         parent_key=RoborockDevicePropField.STATUS,
         name="Current error",
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -235,25 +236,28 @@ async def async_setup_entry(
 
     for device_id, device_info in coordinator.api.device_map.items():
         unique_id = slugify(device_id)
-        device_prop = coordinator.data.get(device_id)
-        if device_prop:
-            for sensor, description in VACUUM_SENSORS.items():
-                parent_key_data = getattr(device_prop, description.parent_key)
-                if not parent_key_data:
-                    _LOGGER.debug(
-                        "It seems the %s does not support the %s as the initial value is None",
-                        device_info.product.model,
-                        description.key,
+        if coordinator.data:
+            device_prop = coordinator.data.get(device_id)
+            if device_prop:
+                for sensor, description in VACUUM_SENSORS.items():
+                    parent_key_data = getattr(device_prop, description.parent_key)
+                    if not parent_key_data:
+                        _LOGGER.debug(
+                            "It seems the %s does not support the %s as the initial value is None",
+                            device_info.product.model,
+                            sensor,
+                        )
+                        continue
+                    entities.append(
+                        RoborockSensor(
+                            f"{sensor}_{unique_id}",
+                            device_info,
+                            coordinator,
+                            description,
+                        )
                     )
-                    continue
-                entities.append(
-                    RoborockSensor(
-                        f"{sensor}_{unique_id}",
-                        device_info,
-                        coordinator,
-                        description,
-                    )
-                )
+        else:
+            _LOGGER.warning("Failed setting up sensors no Roborock data")
 
     async_add_entities(entities)
 
@@ -279,9 +283,12 @@ class RoborockSensor(RoborockCoordinatedEntity, SensorEntity):
     @callback
     def _extract_attributes(self, data):
         """Return state attributes with valid values."""
-        value = None
+        if self.entity_description.parent_key:
+            data = getattr(data, self.entity_description.parent_key)
+            if not data:
+                return
         return {
-            attr: value
+            attr: getattr(data, attr)
             for attr in self.entity_description.attributes
             if hasattr(data, attr)
         }
@@ -292,7 +299,7 @@ class RoborockSensor(RoborockCoordinatedEntity, SensorEntity):
         native_value = self._determine_native_value()
         # Sometimes (quite rarely) the device returns None as the sensor value so we
         # check that the value: before updating the state.
-        if native_value:
+        if native_value is not None:
             data = self.coordinator.data.get(self._device_id)
             self._attr_native_value = native_value
             self._attr_extra_state_attributes = self._extract_attributes(data)
@@ -317,7 +324,7 @@ class RoborockSensor(RoborockCoordinatedEntity, SensorEntity):
         else:
             native_value = getattr(data, self.entity_description.key)
 
-        if native_value:
+        if native_value is not None:
             if self.entity_description.value:
                 native_value = self.entity_description.value(native_value)
             if (
@@ -329,7 +336,6 @@ class RoborockSensor(RoborockCoordinatedEntity, SensorEntity):
         # This is a work around while https://github.com/home-assistant/core/pull/65743 is not merged
         if self.entity_description.translation_key:
             native_value = self.translate(
-                self.entity_description.translation_key,
                 self.entity_description.translation_attr,
                 native_value
             )

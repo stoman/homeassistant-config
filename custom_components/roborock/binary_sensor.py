@@ -17,8 +17,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
 
 from . import RoborockDataUpdateCoordinator
-from .api.containers import StatusField
-from .api.typing import RoborockDeviceInfo, RoborockDevicePropField
+from roborock.containers import StatusField
+from roborock.typing import RoborockDeviceInfo, RoborockDevicePropField
 from .const import (
     DOMAIN,
     MODELS_VACUUM_WITH_MOP,
@@ -103,25 +103,28 @@ async def async_setup_entry(
         if model in MODELS_VACUUM_WITH_SEPARATE_MOP:
             sensors = VACUUM_SENSORS_SEPARATE_MOP
         unique_id = slugify(device_id)
-        device_prop = coordinator.data.get(device_id)
-        if device_prop:
-            for sensor, description in sensors.items():
-                parent_key_data = getattr(device_prop, description.parent_key)
-                if not parent_key_data:
-                    _LOGGER.debug(
-                        "It seems the %s does not support the %s as the initial value is None",
-                        device_info.product.model,
-                        description.key,
+        if coordinator.data:
+            device_prop = coordinator.data.get(device_id)
+            if device_prop:
+                for sensor, description in sensors.items():
+                    parent_key_data = getattr(device_prop, description.parent_key)
+                    if not parent_key_data:
+                        _LOGGER.debug(
+                            "It seems the %s does not support the %s as the initial value is None",
+                            device_info.product.model,
+                            sensor,
+                        )
+                        continue
+                    entities.append(
+                        RoborockBinarySensor(
+                            f"{sensor}_{unique_id}",
+                            device_info,
+                            coordinator,
+                            description,
+                        )
                     )
-                    continue
-                entities.append(
-                    RoborockBinarySensor(
-                        f"{sensor}_{unique_id}",
-                        device_info,
-                        coordinator,
-                        description,
-                    )
-                )
+        else:
+            _LOGGER.warning("Failed setting up binary sensors no Roborock data")
 
     async_add_entities(entities)
 
@@ -145,7 +148,7 @@ class RoborockBinarySensor(RoborockCoordinatedEntity, BinarySensorEntity):
     @callback
     def _handle_coordinator_update(self) -> None:
         native_value = self._determine_native_value()
-        if native_value:
+        if native_value is not None:
             self._attr_is_on = native_value
             super()._handle_coordinator_update()
 
@@ -160,7 +163,7 @@ class RoborockBinarySensor(RoborockCoordinatedEntity, BinarySensorEntity):
                 return
 
         native_value = getattr(data, self.entity_description.key)
-        if native_value and self.entity_description.value:
+        if native_value is not None and self.entity_description.value:
             return self.entity_description.value(native_value)
 
         return native_value

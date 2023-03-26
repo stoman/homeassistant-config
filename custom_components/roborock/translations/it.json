@@ -2,6 +2,13 @@
   "config": {
     "step": {
       "user": {
+        "description": "Seleziona un metodo di autenticazione",
+        "menu_options": {
+          "code": "Accedi con il codice di autenticazione e-mail",
+          "password": "Accedi con password"
+        }
+      },
+      "email": {
         "description": "Usare le credenziali dell'app",
         "data": {
           "username": "Email"
@@ -12,6 +19,12 @@
         "data": {
           "code": "Codice di verifica"
         }
+      },
+      "password": {
+        "description": "Digita la tua password",
+        "data": {
+          "password": "Password"
+        }
       }
     },
     "error": {
@@ -19,19 +32,21 @@
       "auth": "Accesso fallito. Controlla le credenziali"
     },
     "abort": {
-      "already_configured": "Device is already configured"
+      "already_configured": "L'account è già configurato",
+      "already_in_progress": "L'account è in fase di configurazione"
     }
   },
   "options": {
     "step": {
       "user": {
-        "description": "Select a platform to configure",
-        "data": {
-          "platform": "Platform"
+        "description": "Seleziona una piattaforma da configurare",
+        "menu_options": {
+          "vacuum": "Aspirapolvere",
+          "camera": "Camera"
         }
       },
       "camera": {
-        "description": "Camera Options",
+        "description": "Opzioni camera",
         "data": {
           "map_transformation.scale": "Scala della mappa",
           "map_transformation.rotate": "Rotazione della mappa",
@@ -42,9 +57,9 @@
         }
       },
       "vacuum": {
-        "description": "Vacuum options",
+        "description": "Opzioni aspirapolvere",
         "data": {
-          "include_shared": "Include shared devices"
+          "include_shared": "Includi i dispositivi condivisi"
         }
       }
     }

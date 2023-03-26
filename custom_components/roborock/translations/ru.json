@@ -2,15 +2,28 @@
   "config": {
     "step": {
       "user": {
+        "description": "Выберите метод аутентификации",
+        "menu_options": {
+          "code": "Войти с помощаю кода на почту",
+          "password": "Войти с помощью пароля"
+        }
+      },
+      "email": {
         "description": "Ваши данные из приложения",
         "data": {
-          "username": "Email"
+          "username": "Почта"
         }
       },
       "code": {
         "description": "Введите код отправленный вам на почту",
         "data": {
           "code": "Код подтверждения"
+        }
+      },
+      "password": {
+        "description": "Введите свой пароль",
+        "data": {
+          "password": "Пароль"
         }
       }
     },
@@ -19,19 +32,21 @@
       "auth": "Не удалось войти. Проверьте данные."
     },
     "abort": {
-      "already_configured": "Device is already configured"
+      "already_configured": "Аккаунт уже настроен",
+      "already_in_progress": "Аккаунт уже настраивается"
     }
   },
   "options": {
     "step": {
       "user": {
-        "description": "Select a platform to configure",
-        "data": {
-          "platform": "Platform"
+        "description": "Выберите платформу для настройки",
+        "menu_options": {
+          "vacuum": "Пылесос",
+          "camera": "Камера"
         }
       },
       "camera": {
-        "description": "Camera Options",
+        "description": "Параметры камеры",
         "data": {
           "map_transformation.scale": "Масштаб карты",
           "map_transformation.rotate": "Вращение карты",
@@ -42,9 +57,9 @@
         }
       },
       "vacuum": {
-        "description": "Vacuum options",
+        "description": "Параметры пылесоса",
         "data": {
-          "include_shared": "Include shared devices"
+          "include_shared": "Добавить общие устройства"
         }
       }
     }
