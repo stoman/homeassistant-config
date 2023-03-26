@@ -7,5 +7,5 @@ substitutions:
   wifi_fallback_password: !secret hobbyzimmer_wifi_fallback_password
 
 packages:
-  device: !include .device.esp8266.yaml
-  dht22: !include .sensor.dht22.yaml
+  device: !include .device.esp32.yaml
+  bme280: !include .sensor.bme280.yaml

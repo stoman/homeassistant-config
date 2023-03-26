@@ -1,0 +1,11 @@
+---
+substitutions:
+  name: "esp-waschkueche"
+  prefix: "Waschküche" 
+  api_key: !secret waschkueche_api_key
+  ota_password: !secret waschkueche_ota_password
+  wifi_fallback_password: !secret waschkueche_wifi_fallback_password
+
+packages:
+  device: !include .device.esp8266.yaml
+  dht22: !include .sensor.dht22.yaml
