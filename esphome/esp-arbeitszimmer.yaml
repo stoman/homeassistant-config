@@ -2,6 +2,7 @@
 substitutions:
   name: "esp-arbeitszimmer"
   prefix: "Arbeitszimmer" 
+  desk_mac_address: "E4:95:92:1D:A6:BA"
   api_key: !secret arbeitszimmer_api_key
   ota_password: !secret arbeitszimmer_ota_password
   wifi_fallback_password: !secret arbeitszimmer_wifi_fallback_password
@@ -9,3 +10,4 @@ substitutions:
 packages:
   device: !include .device.esp32.yaml
   bme280: !include .sensor.bme280.yaml
+  idasen: !include .sensor.idasen.yaml

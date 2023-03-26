@@ -19,19 +19,20 @@ I hope something can be a useful inspiration for others. If you find this useful
 
 Devices we collected at home include:
 
-- 1x Raspberry Pi 3B running Home Assistant
-- 2x FritzBox and 1x Fritz Repeater for Mesh WiFi
-- Philipps Hue lights: 1x Centris, 2x Infuse, 1x Ensis, 1x play gradient lightstrips, 2x lightstrips, 8x light bulbs
-- 2x Philipps Hue Bridges
-- 1x Philipps Hue HDMI Sync Box
-- 3x Philipps Hue Motion Sensors
-- 12x PHilipps Hue Wall Modules
-- 1x Philipps Hue Smart Plug
-- 2x Chromecast with Google TV
-- 5x Nest Audio
-- 3x [ESP32](esphome/.device.esp32.yaml) boards with [BME280](esphome/.sensor.bme280.yaml) sensors
-- 5x [ESP8266](esphome/.device.esp8266.yaml) boards with [DHT22](esphome/.sensor.dht22.yaml) sensors
-- 1x Roborock S7 Plus
+- Raspberry Pi 3B running Home Assistant
+- FritzBox and Fritz Repeater for Mesh WiFi
+- Philipps Hue lights: Centris, Infuse, Ensis, play gradient lightstrips, lightstrips, light bulbs
+- Philipps Hue Bridges
+- Philipps Hue HDMI Sync Box
+- Philipps Hue Motion Sensors
+- PHilipps Hue Wall Modules
+- Philipps Hue Smart Plug
+- Chromecast with Google TV
+- Nest Audio
+- [ESP32](esphome/.device.esp32.yaml) boards with [BME280](esphome/.sensor.bme280.yaml) sensors
+- [ESP8266](esphome/.device.esp8266.yaml) boards with [DHT22](esphome/.sensor.dht22.yaml) sensors
+- Roborock S7 Plus
+- [Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
 
 ## Naming
 
