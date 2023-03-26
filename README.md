@@ -2,7 +2,6 @@
 
 [![Build status](https://github.com/stoman/homeassistant-config/actions/workflows/home-assistant.yml/badge.svg)](https://github.com/stoman/homeassistant-config/actions/)
 [![MIT license](https://img.shields.io/github/license/stoman/homeassistant-config.svg)](LICENSE.md)
-[![GitHub commits](https://badgen.net/github/commits/stoman/homeassistant-config)](https://github.com/stoman/homeassistant-config/commit/)
 [![GitHub stars](https://img.shields.io/github/stars/stoman/homeassistant-config.svg)](https://github.com/stoman/homeassistant-config/stargazers/)
 
 This repository contains our configuration for [Home Assistant](https://github.com/home-assistant). It's a collection of small scripts and fun automations for tinkering around and fun.
