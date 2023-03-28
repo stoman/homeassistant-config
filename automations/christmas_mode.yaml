@@ -1,0 +1,44 @@
+---
+alias: Weihnachtsmodus
+description: ""
+trigger:
+  - device_id: dad1d4c9d8b21e8829377e9aac933f93
+    domain: hue
+    platform: device
+    type: initial_press
+    subtype: 2
+condition: []
+action:
+  - if:
+      - condition: device
+        type: is_off
+        device_id: 9c7e393befa45568ff09bd9c763fc01d
+        entity_id: light.hue_smart_plug_1
+        domain: light
+    then:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.erdgeschoss_weihnachten
+        metadata: {}
+      - service: media_player.play_media
+        target:
+          entity_id: media_player.spotify_stefan
+        data:
+          media_content_id: https://open.spotify.com/playlist/37i9dQZF1DX3h1vasAdBTc?si=bolZs2G9RdmpxYTRMy60cg
+          media_content_type: playlist
+        metadata: {}
+      - service: media_player.select_source
+        data:
+          source: Wohnzimmer
+        target:
+          entity_id: media_player.spotify_stefan
+    else:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.erdgeschoss_weihnachtsbaum_aus
+        metadata: {}
+      - service: media_player.media_pause
+        target:
+          entity_id: media_player.spotify_stefan
+        metadata: {}
+mode: single

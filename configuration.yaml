@@ -12,6 +12,7 @@ recorder:
   commit_interval: 30
 
 automation: !include automations.yaml
+automation split: !include_dir_list automations
 script: !include scripts.yaml
 scene: !include scenes.yaml
 
