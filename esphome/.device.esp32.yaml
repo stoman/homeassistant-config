@@ -5,3 +5,6 @@ packages:
 
 esp32:
   board: az-delivery-devkit-v4
+
+bluetooth_proxy:
+  active: true 
