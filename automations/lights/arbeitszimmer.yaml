@@ -1,0 +1,26 @@
+---
+alias: Licht Arbeitszimmer
+description: ""
+trigger:
+  - device_id: 72b06bd3a455aa644557e439e5e9d1d5
+    domain: hue
+    platform: device
+    type: initial_press
+    subtype: 1
+condition: []
+action:
+  - if:
+      - condition: state
+        entity_id: light.arbeitszimmer
+        state: "on"
+    then:
+      - type: turn_off
+        device_id: 3b0e30b3cd43ae9c49e1c40d0072ce25
+        entity_id: light.arbeitszimmer
+        domain: light
+    else:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.arbeitszimmer_naturliches_licht
+        metadata: {}
+mode: single
