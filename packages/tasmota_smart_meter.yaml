@@ -1,0 +1,23 @@
+---
+# This data is sent by an IR reader which reads the SML interfact of a EMH
+# ED300S meter and sends the data via a tasmota board and an MQTT message
+# broker. Here my tasmota script:
+#
+# >D
+# >B
+# ->sensor53 r
+# >M 1
+# +1,3,s,0,9600,Main
+# 1,77070100010800FF@1000,Counter,kWh,counter,0
+# #
+#
+# I don't get the current power from the meter, but only the total counter and
+# that value rounded to full kWh, sadly.
+homeassistant:
+  customize:
+    sensor.tasmota_main_counter:
+      friendly_name: Stromzähler
+      device_class: energy
+      state_class: total
+      unit_of_measurement: kWh
+      icon: mdi:lightning-bolt

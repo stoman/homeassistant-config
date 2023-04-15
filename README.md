@@ -14,6 +14,7 @@ I hope something can be a useful inspiration for others. If you find this useful
 - Temperature and humidity sensors for ESP devices: [BME280](esphome/.sensor.bme280.yaml), [DHT22](esphome/.sensor.dht22.yaml)
 - [Waste collection schedule from Abfallwirtschaftsbetrieb München (AWM)](packages/waste_collection_schedule.yaml)
 - [IKEA Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
+- [Power meter readings via Tasmota](packages/tasmota_smart_meter.yaml) from an EMH ED300S power meter
 - [Physical light switches activating Philipps Hue's natural light mode](automations/lights/), because for some reason the official app only supports natural light for manual commands and time triggers, not Hue wall modules...
 
 ## Hardware
