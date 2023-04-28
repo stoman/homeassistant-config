@@ -1,0 +1,24 @@
+---
+sensor:
+  - platform: rest
+    name: Todoist
+    method: GET
+    resource: "https://api.todoist.com/sync/v9/projects/get_data"
+    params:
+      project_id: 2312082533
+    headers:
+      Authorization: !secret todoist_api_token
+    value_template: "{{ value_json['project']['id'] }}"
+    json_attributes:
+      - project
+      - items
+    scan_interval: 30
+
+rest_command:
+  todoist:
+    method: post
+    url: "https://api.todoist.com/sync/v9/{{ url }}"
+    payload: "{{ payload }}"
+    headers:
+      Authorization: !secret todoist_api_token
+    content_type: "application/x-www-form-urlencoded"
