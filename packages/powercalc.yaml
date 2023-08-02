@@ -1,0 +1,44 @@
+---
+powercalc:
+  create_domain_groups:
+    - light
+  sensors:
+    - create_group: Networking devices
+      unique_id: networking_devices
+      entities:
+        - entity_id: binary_sensor.fritz_box_7530_link # Router
+          fixed:
+            power: 7.4 # Measured manually
+        - entity_id: sensor.dummy # Router upstairs
+          unique_id: fritz2
+          name: fritz2
+          fixed:
+            power: 9.7 # Measured manually
+        - entity_id: sensor.dummy # HomeAssistant server
+          unique_id: home_assistant
+          name: Home Assistant
+          fixed:
+            power: 7.0 # Measured manually
+        - entity_id: switch.ecb5fa9feda2_internet_access # Philipps Hue Bridge
+          fixed:
+            power: 2.6 # Measured manually
+        - entity_id: switch.ecb5fa9fef3a_internet_access # Philipps Hue Bridge
+          fixed:
+            power: 2.6 # Measured manually
+        - entity_id: binary_sensor.pi_hole_status # Pihole server on a raspberry pi
+          fixed:
+            power: 2.4 # Measured manually
+    # Create energy sensor for power defined below
+    - entity_id: sensor.dummy
+      unique_id: other
+      power_sensor_id: sensor.other_power
+      force_energy_sensor_creation: true
+      name: Andere Stromverbraucher
+template:
+  - sensor:
+      - name: other_power
+        unique_id: other_power
+        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float  - states('sensor.arbeitsplatz_stefan_power') | float  - states('sensor.kuchenkleingerate_power') | float  - states('sensor.kuhlschrank_power') | float  - states('sensor.multimedia_power') | float  - states('sensor.nahplatz_power') | float  - states('sensor.waschmaschine_power') | float }}"
+        device_class: energy
+        state_class: measurement
+        unit_of_measurement: W
