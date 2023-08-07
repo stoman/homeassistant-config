@@ -12,10 +12,12 @@ I hope something can be a useful inspiration for others. If you find this useful
 
 - [Christmas switch](automations/christmas_mode.yaml): a physical lightswitch at home with a Christmas tree icon from the plotter dims the lights, switches on the Christmas tree lights, and plays Christmas music on Spotify.
 - Temperature and humidity sensors for ESP devices: [BME280](esphome/.sensor.bme280.yaml), [DHT22](esphome/.sensor.dht22.yaml)
+- [Coffee machine switching on when the toothbrush is used in the morning](automations/coffee.yaml)
 - [Waste collection schedule from Abfallwirtschaftsbetrieb München (AWM)](packages/waste_collection_schedule.yaml)
 - [IKEA Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
 - [Power meter readings via Tasmota](packages/tasmota_smart_meter.yaml) from an EMH ED300S power meter
 - [Physical light switches activating Philipps Hue's natural light mode](automations/lights/), because for some reason the official app only supports natural light for manual commands and time triggers, not Hue wall modules...
+- [Detection of fridge malfunction](automations/fridge/) in case of suspiciously low power consumption or a switch being disabled
 
 ## Hardware
 

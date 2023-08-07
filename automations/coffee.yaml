@@ -1,0 +1,40 @@
+# After using the toothbrush in the morning, switch on the coffee machine for an hour.
+---
+id: "1691144102868"
+alias: Kaffeemaschine am Morgen
+description: ""
+trigger:
+  - platform: state
+    entity_id:
+      - sensor.smart_series_8000_4c24_toothbrush_state
+    to: running
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+condition:
+  - condition: time
+    weekday:
+      - mon
+      - tue
+      - wed
+      - fri
+      - sat
+      - sun
+    after: 07:30:00
+    before: "15:00:00"
+action:
+  - type: turn_on
+    device_id: de323d8267c6d0dbf9ecdd366da2bfca
+    entity_id: 8124d3d1506ff7a826f6da37fddff86d
+    domain: switch
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - type: turn_off
+    device_id: de323d8267c6d0dbf9ecdd366da2bfca
+    entity_id: 8124d3d1506ff7a826f6da37fddff86d
+    domain: switch
+mode: single

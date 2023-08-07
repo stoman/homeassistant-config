@@ -1,0 +1,25 @@
+# Always keep the fridge switched on. Notify if someone turned it off accidentally.
+---
+id: "1691246045145"
+alias: Kühlschrank immer einschalten
+description: ""
+trigger:
+  - platform: device
+    type: turned_off
+    device_id: c613a00e22c3f85182f2faaa7e8a001b
+    entity_id: switch.kuhlschrank
+    domain: switch
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 10
+condition: []
+action:
+  - type: turn_on
+    device_id: c613a00e22c3f85182f2faaa7e8a001b
+    entity_id: switch.kuhlschrank
+    domain: switch
+  - service: notify.notify
+    data:
+      message: Kühlschrank war deaktiviert und wird wieder eingeschaltet.
+mode: single

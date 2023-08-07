@@ -1,0 +1,23 @@
+# If the fridge is consuming less power than expected send a warning.
+---
+id: "1691246256034"
+alias: Kühlschrank Stromverbrauch Warnung
+description: ""
+trigger:
+  - type: power
+    platform: device
+    device_id: c613a00e22c3f85182f2faaa7e8a001b
+    entity_id: switch.kuhlschrank
+    domain: sensor
+    below: 10
+    # No consumption for up to 40 minutes is regular behavior.
+    for:
+      hours: 1
+      minutes: 0
+      seconds: 0
+condition: []
+action:
+  - service: notify.notify
+    data:
+      message: Kühlschrank hat einen unerwartet geringen Stromverbrauch. Bitte prüfen.
+mode: single
