@@ -38,7 +38,7 @@ Devices we collected at home include:
 - Roborock S7 Plus
 - [Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
 - Raspberry Pi 3B running Pi-hole
-- Shelly Plug Plus S for measuring power consumption
+- Shelly Plug Plus S for measuring power consumption and Shelly Plug 2 for high wattage devices
 
 ## Naming
 

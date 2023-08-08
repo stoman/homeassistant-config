@@ -38,7 +38,7 @@ template:
   - sensor:
       - name: other_power
         unique_id: other_power
-        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float  - states('sensor.arbeitsplatz_stefan_power') | float  - states('sensor.kuchenkleingerate_power') | float  - states('sensor.kuhlschrank_power') | float  - states('sensor.multimedia_power') | float  - states('sensor.nahplatz_power') | float  - states('sensor.waschmaschine_power') | float }}"
+        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float - states('sensor.arbeitsplatz_stefan_power') | float - states('sensor.hobbyzimmer_power') | float - states('sensor.kuchenkleingerate_power') | float - states('sensor.kuhlschrank_power') | float - states('sensor.multimedia_power') | float - states('sensor.nahplatz_power') | float - states('sensor.staubsauger_power') | float - states('sensor.waschmaschine_power') | float }}"
         device_class: energy
         state_class: measurement
         unit_of_measurement: W
