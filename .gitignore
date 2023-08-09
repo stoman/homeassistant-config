@@ -1,3 +1,4 @@
 .storage
 home-assistant*
 secrets.yaml
+tts

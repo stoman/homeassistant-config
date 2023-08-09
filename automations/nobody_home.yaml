@@ -1,0 +1,30 @@
+---
+id: "1691580445098"
+alias: Niemand zuhause
+trigger:
+  - platform: state
+    entity_id:
+      - zone.home
+    to: "0"
+    for:
+      minutes: 3
+condition: []
+action:
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.wohnzimmer_hub
+      message: Es wurde niemand mehr zuhause erkannt. Ich schalte nun alle Geräte ab.
+      language: de
+      cache: true
+  - service: light.turn_off
+    data:
+      entity_id: all
+  - service: switch.turn_off
+    target:
+      entity_id:
+        - switch.arbeitsplatz_anna
+        - switch.hobbyzimmer
+        - switch.kuchenkleingerate
+        - switch.multimedia
+        - switch.nahplatz
+mode: single
