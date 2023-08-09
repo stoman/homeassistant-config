@@ -26,3 +26,11 @@ http:
     - 172.30.32.1
   ssl_certificate: /ssl/fullchain.pem
   ssl_key: /ssl/privkey.pem
+
+sensor:
+  # Required for wake up light
+  - platform: time_date
+    display_options:
+      - "time"
+      - "date"
+      - "date_time_iso"
