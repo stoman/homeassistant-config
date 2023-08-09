@@ -2,15 +2,12 @@
 ---
 id: "1691144102868"
 alias: Kaffeemaschine am Morgen
-description: ""
 trigger:
   - platform: state
     entity_id:
       - sensor.smart_series_8000_4c24_toothbrush_state
     to: running
     for:
-      hours: 0
-      minutes: 0
       seconds: 30
 condition:
   - condition: time
@@ -24,17 +21,14 @@ condition:
     after: 07:30:00
     before: "15:00:00"
 action:
-  - type: turn_on
-    device_id: c475688ba0aaf35729a5cece276883b2
-    entity_id: switch.kuchenkleingerate
-    domain: switch
+  - service: switch.turn_on
+    target:
+      entity_id:
+        - switch.kuchenkleingerate
   - delay:
       hours: 1
-      minutes: 0
-      seconds: 0
-      milliseconds: 0
-  - type: turn_off
-    device_id: c475688ba0aaf35729a5cece276883b2
-    entity_id: switch.kuchenkleingerate
-    domain: switch
+  - service: switch.turn_off
+    target:
+      entity_id:
+        - switch.kuchenkleingerate
 mode: single

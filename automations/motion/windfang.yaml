@@ -1,6 +1,6 @@
 ---
+id: "1158443553638"
 alias: Bewegung im Windfang
-description: ""
 trigger:
   - platform: state
     entity_id: binary_sensor.bewegungsmelder_windfang_motion
@@ -17,7 +17,7 @@ action:
       - if:
           - condition: numeric_state
             entity_id: sensor.bewegungsmelder_windfang_illuminance
-            above: "12"
+            above: 12
         then:
           - if:
               - condition: state
@@ -29,20 +29,18 @@ action:
           - service: scene.turn_on
             target:
               entity_id: scene.windfang_hell
-            metadata: {}
     else:
       - service: scene.turn_on
         target:
           entity_id: scene.windfang_gedimmt
-        metadata: {}
   - wait_for_trigger:
       - platform: state
         entity_id: binary_sensor.bewegungsmelder_windfang_motion
         to: "off"
   - delay:
       seconds: 15
-  - type: turn_off
-    device_id: b6004a9f3fa7fbd88f4e9bd24fb55e03
-    entity_id: light.windfang
-    domain: light
+  - service: light.turn_off
+    target:
+      entity_id:
+        - light.windfang
 mode: restart
