@@ -1,0 +1,23 @@
+---
+id: "2076071352764"
+alias: Licht Arbeitszimmer Taste 3
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_arbeitszimmer_button
+      type: initial_press
+      subtype: 3
+action:
+  - if:
+      - condition: state
+        entity_id: light.arbeitszimmer
+        state: "on"
+    then:
+      - service: light.turn_on
+        target:
+          entity_id:
+            - light.arbeitszimmer
+        data_template:
+          brightness: "{{states.light.arbeitszimmer.attributes.brightness - 50}}"
+mode: single

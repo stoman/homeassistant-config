@@ -1,0 +1,16 @@
+---
+id: "891756908635"
+alias: Licht Arbeitszimmer Taste 4
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_arbeitszimmer_button
+      type: initial_press
+      subtype: 4
+action:
+  - service: switch.toggle
+    target:
+      entity_id:
+        - switch.arbeitsplatz_stefan
+mode: single

@@ -1,0 +1,15 @@
+---
+id: "820927642976"
+alias: Licht Nähzimmer Taste 4
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_nahzimmer_button
+      type: initial_press
+      subtype: 4
+action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.nahzimmer_entspannen
+mode: single

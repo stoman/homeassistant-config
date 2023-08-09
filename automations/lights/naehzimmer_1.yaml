@@ -1,6 +1,6 @@
 ---
 id: "424559878211"
-alias: Licht Nähzimmer
+alias: Licht Nähzimmer Taste 1
 trigger:
   - platform: event
     event_type: hue_event

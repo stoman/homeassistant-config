@@ -1,6 +1,6 @@
 ---
 id: "234910955523"
-alias: Licht Arbeitszimmer
+alias: Licht Arbeitszimmer Taste 1
 trigger:
   - platform: event
     event_type: hue_event

@@ -1,0 +1,16 @@
+---
+id: "251298892516"
+alias: Licht Nähzimmer Taste 3
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_nahzimmer_button
+      type: initial_press
+      subtype: 3
+action:
+  - service: switch.toggle
+    target:
+      entity_id:
+        - switch.arbeitsplatz_anna
+mode: single
