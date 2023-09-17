@@ -1,0 +1,25 @@
+---
+id: "automations/lights/bad.yaml"
+alias: Licht Flur Oben
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_flur_oben_button
+      type: initial_press
+      subtype: 1
+action:
+  - if:
+      - condition: state
+        entity_id: light.flur_oben
+        state: "on"
+    then:
+      - service: light.turn_off
+        target:
+          entity_id:
+            - light.flur_oben
+    else:
+      - service: scene.turn_on
+        target:
+          entity_id: scene.flur_oben_naturliches_licht
+mode: single
