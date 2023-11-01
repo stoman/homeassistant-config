@@ -1,0 +1,9 @@
+cast_dashbord:
+  alias: Cast Dashbord
+  sequence:
+  - service: cast.show_lovelace_view
+    data:
+      entity_id: media_player.wohnzimmer_hub
+      dashboard_path: dashboard-dasboard
+      view_path: home
+  mode: single
