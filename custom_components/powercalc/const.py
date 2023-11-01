@@ -9,7 +9,7 @@ from homeassistant.const import __version__ as HA_VERSION  # noqa
 if AwesomeVersion(HA_VERSION) >= AwesomeVersion("2023.8.0"):
     from enum import StrEnum
 else:
-    from homeassistant.backports.enum import StrEnum
+    from homeassistant.backports.enum import StrEnum  # pragma: no cover
 
 from homeassistant.components.utility_meter.const import DAILY, MONTHLY, WEEKLY
 from homeassistant.const import (
@@ -170,6 +170,8 @@ SERVICE_RESET_ENERGY = "reset_energy"
 SERVICE_INCREASE_DAILY_ENERGY = "increase_daily_energy"
 SERVICE_CALIBRATE_UTILITY_METER = "calibrate_utility_meter"
 SERVICE_CALIBRATE_ENERGY = "calibrate_energy"
+SERVICE_SWITCH_SUB_PROFILE = "switch_sub_profile"
+SERVICE_CHANGE_GUI_CONFIGURATION = "change_gui_config"
 
 SIGNAL_POWER_SENSOR_STATE_CHANGE = "powercalc_power_sensor_state_change"
 

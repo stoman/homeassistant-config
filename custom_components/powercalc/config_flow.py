@@ -50,6 +50,7 @@ from .const import (
     CONF_MODE,
     CONF_MODEL,
     CONF_MULTIPLY_FACTOR,
+    CONF_MULTIPLY_FACTOR_STANDBY,
     CONF_ON_TIME,
     CONF_PLAYBOOK,
     CONF_PLAYBOOKS,
@@ -69,6 +70,7 @@ from .const import (
     DISCOVERY_POWER_PROFILE,
     DISCOVERY_SOURCE_ENTITY,
     DOMAIN,
+    DOMAIN_CONFIG,
     DUMMY_ENTITY_ID,
     ENERGY_INTEGRATION_METHOD_LEFT,
     ENERGY_INTEGRATION_METHODS,
@@ -92,10 +94,10 @@ CONF_CONFIRM_AUTODISCOVERED_MODEL = "confirm_autodisovered_model"
 MENU_OPTION_LIBRARY = "menu_library"
 
 SENSOR_TYPE_MENU = {
-    SensorType.DAILY_ENERGY: "Daily energy",
-    SensorType.GROUP: "Group",
     SensorType.VIRTUAL_POWER: "Virtual power (manual)",
     MENU_OPTION_LIBRARY: "Virtual power (library)",
+    SensorType.GROUP: "Group",
+    SensorType.DAILY_ENERGY: "Daily energy",
     SensorType.REAL_POWER: "Energy from real power sensor",
 }
 
@@ -122,6 +124,10 @@ SCHEMA_DAILY_ENERGY_OPTIONS = vol.Schema(
                 mode=selector.NumberSelectorMode.BOX,
             ),
         ),
+        vol.Optional(
+            CONF_CREATE_UTILITY_METERS,
+            default=False,
+        ): selector.BooleanSelector(),
     },
 )
 SCHEMA_DAILY_ENERGY = vol.Schema(
@@ -239,6 +245,7 @@ SCHEMA_POWER_ADVANCED = vol.Schema(
         vol.Optional(CONF_IGNORE_UNAVAILABLE_STATE): selector.BooleanSelector(),
         vol.Optional(CONF_UNAVAILABLE_POWER): vol.Coerce(float),
         vol.Optional(CONF_MULTIPLY_FACTOR): vol.Coerce(float),
+        vol.Optional(CONF_MULTIPLY_FACTOR_STANDBY): selector.BooleanSelector(),
         vol.Optional(
             CONF_ENERGY_INTEGRATION_METHOD,
             default=ENERGY_INTEGRATION_METHOD_LEFT,
@@ -347,7 +354,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             selected_strategy = CalculationStrategy(
-                user_input.get(CONF_MODE) or CalculationStrategy.LUT
+                user_input.get(CONF_MODE) or CalculationStrategy.LUT,
             )
             entity_id = user_input.get(CONF_ENTITY_ID)
             if (
@@ -386,7 +393,8 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def forward_to_strategy_step(
-        self, strategy: CalculationStrategy
+        self,
+        strategy: CalculationStrategy,
     ) -> FlowResult:
         if strategy == CalculationStrategy.FIXED:
             return await self.async_step_fixed()
@@ -415,9 +423,7 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
-            self.sensor_config.update(
-                {CONF_DAILY_FIXED_ENERGY: _build_daily_energy_config(user_input)},
-            )
+            self.sensor_config.update(_build_daily_energy_config(user_input))
             return self.create_config_entry()
 
         return self.async_show_form(
@@ -701,7 +707,10 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return self.async_show_form(
             step_id="power_advanced",
-            data_schema=SCHEMA_POWER_ADVANCED,
+            data_schema=_fill_schema_defaults(
+                SCHEMA_POWER_ADVANCED,
+                _get_global_powercalc_config(self.hass),
+            ),
             errors={},
         )
 
@@ -803,8 +812,7 @@ class OptionsFlowHandler(OptionsFlow):
     ) -> dict:
         """Save options, and return errors when validation fails."""
         if self.sensor_type == SensorType.DAILY_ENERGY:
-            daily_energy_config = _build_daily_energy_config(user_input)
-            self.current_config.update({CONF_DAILY_FIXED_ENERGY: daily_energy_config})
+            self.current_config.update(_build_daily_energy_config(user_input))
 
         if self.sensor_type == SensorType.VIRTUAL_POWER:
             generic_option_schema = SCHEMA_POWER_OPTIONS.extend(
@@ -964,9 +972,15 @@ def _create_virtual_power_schema(
                 ): STRATEGY_SELECTOR,
             },
         )
-        return schema.extend(SCHEMA_POWER_OPTIONS.schema)  # type: ignore
+        options_schema = SCHEMA_POWER_OPTIONS
+    else:
+        options_schema = SCHEMA_POWER_OPTIONS_LIBRARY
 
-    return schema.extend(SCHEMA_POWER_OPTIONS_LIBRARY.schema)  # type: ignore
+    power_options = _fill_schema_defaults(
+        options_schema,
+        _get_global_powercalc_config(hass),
+    )
+    return schema.extend(power_options.schema)  # type: ignore
 
 
 def _create_group_options_schema(
@@ -1161,11 +1175,18 @@ def _build_strategy_config(
 def _build_daily_energy_config(user_input: dict[str, Any]) -> dict[str, Any]:
     """Build the config under daily_energy: key."""
     schema = SCHEMA_DAILY_ENERGY_OPTIONS
-    config: dict[str, Any] = {}
+    config: dict[str, Any] = {
+        CONF_DAILY_FIXED_ENERGY: {},
+    }
     for key in schema.schema:
-        if user_input.get(key) is None:
+        val = user_input.get(key)
+        if val is None:
             continue
-        config[str(key)] = user_input.get(key)
+        if key == CONF_CREATE_UTILITY_METERS:
+            config[CONF_CREATE_UTILITY_METERS] = val
+            continue
+
+        config[CONF_DAILY_FIXED_ENERGY][str(key)] = val
     return config
 
 
@@ -1201,3 +1222,8 @@ def _fill_schema_defaults(
                 new_key.description = {"suggested_value": options.get(key)}  # type: ignore
         schema[new_key] = val
     return vol.Schema(schema)
+
+
+def _get_global_powercalc_config(hass: HomeAssistant) -> dict[str, str]:
+    powercalc = hass.data.get(DOMAIN) or {}
+    return powercalc.get(DOMAIN_CONFIG) or {}
