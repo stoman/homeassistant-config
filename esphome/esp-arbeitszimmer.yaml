@@ -10,4 +10,3 @@ substitutions:
 packages:
   device: !include .device.esp32.yaml
   bme280: !include .sensor.bme280.yaml
-  idasen: !include .sensor.idasen.yaml
