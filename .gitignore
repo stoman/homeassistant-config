@@ -1,4 +1,5 @@
 .storage
+**/__pycache__/**
 home-assistant*
 secrets.yaml
 tts
