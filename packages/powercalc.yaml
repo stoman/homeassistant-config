@@ -34,11 +34,22 @@ powercalc:
       power_sensor_id: sensor.other_power
       force_energy_sensor_creation: true
       name: Andere Stromverbraucher
+    - entity_id: sensor.dummy
+      unique_id: infeed
+      power_sensor_id: sensor.infeed_power
+      force_energy_sensor_creation: true
+      name: Einspeisung
 template:
   - sensor:
       - name: other_power
         unique_id: other_power
-        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float - states('sensor.arbeitsplatz_stefan_power') | float - states('sensor.hobbyzimmer_power') | float - states('sensor.kuchenkleingerate_power') | float - states('sensor.kuhlschrank_power') | float - states('sensor.multimedia_power') | float - states('sensor.nahplatz_power') | float - states('sensor.staubsauger_power') | float - states('sensor.waschmaschine_power') | float }}"
+        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float - states('sensor.arbeitsplatz_stefan_power') | float - states('sensor.hobbyzimmer_power') | float - states('sensor.kuchenkleingerate_power') | float - states('sensor.kuhlschrank_power') | float - states('sensor.multimedia_power') | float - states('sensor.nahplatz_power') | float - states('sensor.staubsauger_power') | float - states('sensor.waschmaschine_power') | float + states('sensor.hoymiles_gateway_solarh_2059950_real_power') | float}}"
+        device_class: energy
+        state_class: measurement
+        unit_of_measurement: W
+      - name: infeed_power
+        unique_id: infeed_power
+        state: "{{ 0 if states('sensor.tasmota_main_power') | float > 0 else states('sensor.tasmota_main_power') | float * -1}}"
         device_class: energy
         state_class: measurement
         unit_of_measurement: W
