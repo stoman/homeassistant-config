@@ -1,0 +1,6 @@
+---
+adaptive_lighting:
+  - name: "default"
+    lights:
+      - light.arbeitszimmer
+    min_brightness: 20

@@ -9,17 +9,8 @@ trigger:
       type: initial_press
       subtype: 1
 action:
-  - if:
-      - condition: state
-        entity_id: light.arbeitszimmer
-        state: "on"
-    then:
-      - service: light.turn_off
-        target:
-          entity_id:
-            - light.arbeitszimmer
-    else:
-      - service: scene.turn_on
-        target:
-          entity_id: scene.arbeitszimmer_naturliches_licht
+  - service: light.toggle
+    target:
+      entity_id:
+        - light.arbeitszimmer
 mode: single
