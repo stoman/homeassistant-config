@@ -11,13 +11,6 @@ trigger:
       seconds: 30
 condition:
   - condition: time
-    weekday:
-      - mon
-      - tue
-      - wed
-      - fri
-      - sat
-      - sun
     after: 07:30:00
     before: "15:00:00"
 action:

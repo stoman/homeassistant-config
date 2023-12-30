@@ -6,7 +6,7 @@ description: ""
 trigger:
   - type: power
     platform: device
-    device_id: c613a00e22c3f85182f2faaa7e8a001b
+    device_id: 7017a74f1f70e630d581c1e092a7eccc
     entity_id: switch.kuhlschrank
     domain: sensor
     below: 10
