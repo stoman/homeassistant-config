@@ -1,6 +1,43 @@
 ---
 adaptive_lighting:
-  - name: "default"
+  - name: "dark"
     lights:
       - light.arbeitszimmer
-    min_brightness: 20
+      - light.hobbyzimmer
+      - light.schlafzimmer
+      - light.schrankzimmer
+      - light.toilette
+      - light.wohnzimmer
+    min_brightness: 30
+    max_brightness: 100
+    max_sunrise_time: "08:00:00"
+    min_sunset_time: "19:00:00"
+    take_over_control: true
+    adapt_only_on_bare_turn_on: true
+  - name: "medium"
+    lights:
+      - light.bad
+      - light.flur_keller
+      - light.flur_oben
+      - light.lampe_kuche
+      - light.vorratskeller
+      - light.waschkuche
+      - light.windfang
+    min_brightness: 75
+    max_brightness: 100
+    max_sunrise_time: "08:00:00"
+    min_sunset_time: "19:00:00"
+    take_over_control: true
+    adapt_only_on_bare_turn_on: true
+  - name: "light"
+    lights:
+      - light.lampe_arbeitsflache
+      - light.nahzimmer
+    min_brightness: 100
+    max_brightness: 100
+    min_color_temp: 3000
+    max_color_temp: 6500
+    max_sunrise_time: "08:00:00"
+    min_sunset_time: "19:00:00"
+    take_over_control: true
+    adapt_only_on_bare_turn_on: true

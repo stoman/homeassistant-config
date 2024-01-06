@@ -1,5 +1,5 @@
 ---
-id: "1188625648347"
+id: "eda9e512-a286-4b13-8a25-159405c425a3"
 alias: Licht Schlafzimmer Taste 3
 trigger:
   - platform: event

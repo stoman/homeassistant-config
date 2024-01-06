@@ -1,5 +1,5 @@
 ---
-id: "1177464639129"
+id: "4ca73738-3646-4a06-a127-6bc9ef15cef9"
 alias: Licht Arbeitszimmer Taste 2
 trigger:
   - platform: event

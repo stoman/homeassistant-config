@@ -14,7 +14,7 @@ I hope something can be a useful inspiration for others. If you find this useful
 - [Coffee machine switching on when the toothbrush is used in the morning](automations/coffee.yaml)
 - [Waste collection schedule from Abfallwirtschaftsbetrieb München (AWM)](packages/waste_collection_schedule.yaml)
 - [Power meter readings via Tasmota](packages/tasmota_smart_meter.yaml) from an EMH ED300S power meter
-- [Physical light switches activating Philipps Hue's natural light mode](automations/lights/), because for some reason the official app only supports natural light for manual commands and time triggers, not Hue wall modules...
+- [Physical light switches](automations/lights/) for [adaptive lighting](packages/adaptive_lighting.yaml) to support the circadian rythm using light.
 - [Detection of fridge malfunction](automations/fridge/) in case of suspiciously low power consumption or a switch being disabled
 
 ## Hardware

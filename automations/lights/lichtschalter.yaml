@@ -1,0 +1,122 @@
+---
+id: "a773fa36-942b-4063-a404-69f5ce68cf9f"
+alias: Lichtschalter
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_arbeitszimmer_button
+      type: initial_press
+      subtype: 1
+    id: arbeitszimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_bad_button
+      type: initial_press
+      subtype: 1
+    id: bad
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_flur_oben_button
+      type: initial_press
+      subtype: 1
+    id: flur_oben
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_hobbyzimmer_button
+      type: initial_press
+      subtype: 1
+    id: hobbyzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_kuche_button
+      type: initial_press
+      subtype: 1
+    id: lampe_arbeitsflache
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_kuche_button
+      type: initial_press
+      subtype: 2
+    id: lampe_kuche
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_nahzimmer_button
+      type: initial_press
+      subtype: 1
+    id: nahzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_schlafzimmer_button
+      type: initial_press
+      subtype: 1
+    id: schlafzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_schlafzimmer_button
+      type: initial_press
+      subtype: 1
+    id: schlafzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_schrankzimmer_button
+      type: initial_press
+      subtype: 1
+    id: schrankzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_toilette_button
+      type: initial_press
+      subtype: 1
+    id: toilette
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_sofa_button
+      type: initial_press
+      subtype: 1
+    id: wohnzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_tur_button
+      type: initial_press
+      subtype: 1
+    id: flur_keller
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_tur_button
+      type: initial_press
+      subtype: 2
+    id: wohnzimmer
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_treppe_button
+      type: initial_press
+      subtype: 1
+    id: flur_oben
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_treppe_button
+      type: initial_press
+      subtype: 2
+    id: wohnzimmer
+action:
+  - service: light.toggle
+    target:
+      entity_id:
+        - light.{{ trigger.id }}
+mode: single

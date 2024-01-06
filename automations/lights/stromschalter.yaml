@@ -1,0 +1,38 @@
+---
+id: 8a5468ef-e8a1-48eb-8f5d-26848022c36c""
+alias: Stromschalter
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_arbeitszimmer_button
+      type: initial_press
+      subtype: 4
+    id: arbeitsplatz_stefan
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_nahzimmer_button
+      type: initial_press
+      subtype: 2
+    id: nahplatz
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: fernbedienung_nahzimmer_button
+      type: initial_press
+      subtype: 3
+    id: arbeitsplatz_anna
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_sofa_button
+      type: initial_press
+      subtype: 2
+    id: multimedia
+action:
+  - service: switch.toggle
+    target:
+      entity_id:
+        - switch.{{ trigger.id }}
+mode: single

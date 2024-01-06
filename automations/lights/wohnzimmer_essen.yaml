@@ -1,0 +1,32 @@
+---
+id: 1789f124-d864-4ef6-bb9f-6102c37f4633""
+alias: Licht Wohnzimmer Essen
+trigger:
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_wohnzimmer_essen_button
+      type: initial_press
+      subtype: 1
+action:
+  - if:
+      - condition: state
+        entity_id: light.wohnzimmer
+        state: "on"
+    then:
+      - service: light.turn_off
+        target:
+          entity_id:
+            - light.wohnzimmer
+    else:
+      - service: adaptive_lighting.set_manual_control
+        data:
+          entity_id: switch.adaptive_lighting_dark
+          manual_control: true
+          lights:
+            - light.lampe_esstisch
+            - light.lampe_esszimmer
+      - service: scene.turn_on
+        target:
+          entity_id: scene.essen
+mode: single

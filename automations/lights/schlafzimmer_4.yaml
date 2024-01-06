@@ -1,5 +1,5 @@
 ---
-id: "1721283752607"
+id: "82700968-4d9f-4f60-9e40-01a5a299eb32"
 alias: Licht Schlafzimmer Taste 4
 trigger:
   - platform: event
@@ -9,6 +9,12 @@ trigger:
       type: initial_press
       subtype: 4
 action:
+  - service: adaptive_lighting.set_manual_control
+    data:
+      entity_id: switch.adaptive_lighting_dark
+      manual_control: true
+      lights:
+        - light.schlafzimmer
   - service: scene.turn_on
     target:
       entity_id: scene.schlafzimmer_kuhles_helles_licht

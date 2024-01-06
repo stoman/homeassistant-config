@@ -1,0 +1,23 @@
+---
+id: "75d6d40b-0ece-47f4-99fe-cc681d02eb1a"
+alias: Bewegung in der Waschküche
+trigger:
+  - platform: state
+    entity_id: binary_sensor.bewegungsmelder_waschkuche_bewegung
+    to: "on"
+action:
+  - service: light.turn_on
+    target:
+      entity_id:
+        - light.waschkuche
+  - wait_for_trigger:
+      - platform: state
+        entity_id: binary_sensor.bewegungsmelder_waschkuche_bewegung
+        to: "off"
+  - delay:
+      seconds: 60
+  - service: light.turn_off
+    target:
+      entity_id:
+        - light.waschkuche
+mode: restart
