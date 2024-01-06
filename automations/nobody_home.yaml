@@ -8,14 +8,23 @@ trigger:
     to: "0"
     for:
       minutes: 3
-condition: []
+    id: "Es wurde niemand mehr zuhause erkannt ich schalte nun alle Geräte ab"
+  - platform: event
+    event_type: hue_event
+    event_data:
+      id: lichtschalter_eingangstur_button
+      type: initial_press
+      subtype: 1
+    id: "Bis bald ich schalte nun alle Geräte ab"
 action:
-  - service: tts.google_translate_say
+  - service: media_player.play_media
+    target:
+      entity_id: all
     data:
-      entity_id: media_player.wohnzimmer_hub
-      message: Es wurde niemand mehr zuhause erkannt. Ich schalte nun alle Geräte ab.
-      language: de
-      cache: true
+      media_content_id: >-
+        media-source://tts/tts.piper?message={{ trigger.id | urlencode }}&language=de_DE&voice=de_DE-eva_k-x_low
+      media_content_type: provider
+  - delay: 5
   - service: light.turn_off
     data:
       entity_id: all

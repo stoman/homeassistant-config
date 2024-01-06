@@ -10,6 +10,7 @@ trigger:
 action:
   - service: tts.google_translate_say
     data:
+      entity_id: media_player.wohnzimmer
       cache: true
       message: Wir schenken den Stadtwerken Strom! Bitte etwas einschalten!
       language: de

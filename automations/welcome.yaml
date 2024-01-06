@@ -1,0 +1,25 @@
+---
+id: "ae92745c-752d-4703-a10a-237148be05b0"
+alias: Willkommen Zuhause
+trigger:
+  - platform: state
+    entity_id: person.anna
+    to: "home"
+    id: "Willkommen Zuhause Anna"
+  - platform: state
+    entity_id: person.cristina
+    to: "home"
+    id: "Willkommen Cristina"
+  - platform: state
+    entity_id: person.stefan
+    to: "home"
+    id: "Willkommen Zuhause Stefan"
+action:
+  - service: media_player.play_media
+    target:
+      entity_id: media_player.wohnzimmer
+    data:
+      media_content_id: >-
+        media-source://tts/tts.piper?message={{ trigger.id | urlencode }}&language=de_DE&voice=de_DE-eva_k-x_low
+      media_content_type: provider
+mode: single
