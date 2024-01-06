@@ -10,7 +10,6 @@ I hope something can be a useful inspiration for others. If you find this useful
 
 ## Highlights
 
-- [Christmas switch](automations/christmas_mode.yaml): a physical lightswitch at home with a Christmas tree icon from the plotter dims the lights, switches on the Christmas tree lights, and plays Christmas music on Spotify.
 - Temperature and humidity sensors for ESP devices: [BME280](esphome/.sensor.bme280.yaml), [DHT22](esphome/.sensor.dht22.yaml)
 - [Coffee machine switching on when the toothbrush is used in the morning](automations/coffee.yaml)
 - [Waste collection schedule from Abfallwirtschaftsbetrieb München (AWM)](packages/waste_collection_schedule.yaml)
