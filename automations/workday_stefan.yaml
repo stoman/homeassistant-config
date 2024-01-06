@@ -1,23 +1,20 @@
 ---
-id: "fe5529ff-61fd-4f52-9cac-94194374719c"
-alias: Annas Arbeitstag beginnt
+id: "d72596b8-db9d-43c2-b7ed-887021e742fc"
+alias: Stefans Arbeitstag beginnt
 trigger:
   - platform: time
-    at: 08:25:00
+    at: 09:00:00
 condition:
   - condition: time
     weekday:
       - mon
-      - tue
-      - wed
-      - thu
       - fri
   - condition: state
-    entity_id: person.anna
+    entity_id: person.stefan
     state: home
 action:
   - service: switch.turn_on
     target:
       entity_id:
-        - switch.arbeitsplatz_anna
+        - switch.arbeitsplatz_stefan
 mode: single

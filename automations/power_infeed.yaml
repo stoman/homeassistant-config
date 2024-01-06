@@ -1,6 +1,6 @@
 ---
-id: "1693733336247"
-alias: "Stromeinspeisung"
+id: "530e46b4-f669-4124-8557-1dbcaadb5c6d"
+alias: Stromeinspeisung
 trigger:
   - platform: numeric_state
     entity_id: sensor.infeed_power

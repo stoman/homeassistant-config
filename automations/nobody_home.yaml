@@ -1,5 +1,5 @@
 ---
-id: "1691580445098"
+id: "1c02fe5b-4809-4b3b-b023-2abf624159fd"
 alias: Niemand zuhause
 trigger:
   - platform: state

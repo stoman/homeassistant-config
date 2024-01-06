@@ -1,24 +1,20 @@
 # Always keep the fridge switched on. Notify if someone turned it off accidentally.
 ---
-id: "1691246045145"
+id: "97120b7c-481f-4899-8b2e-7960047f12cc"
 alias: Kühlschrank immer einschalten
-description: ""
 trigger:
-  - platform: device
-    type: turned_off
-    device_id: 7017a74f1f70e630d581c1e092a7eccc
+  - platform: state
     entity_id: switch.kuhlschrank
-    domain: switch
+    to: "off"
     for:
       hours: 0
       minutes: 0
       seconds: 10
-condition: []
 action:
-  - type: turn_on
-    device_id: 7017a74f1f70e630d581c1e092a7eccc
-    entity_id: switch.kuhlschrank
-    domain: switch
+  - service: switch.turn_on
+    target:
+      entity_id:
+        - switch.kuhlschrank
   - service: notify.notify
     data:
       message: Kühlschrank war deaktiviert und wird wieder eingeschaltet.
