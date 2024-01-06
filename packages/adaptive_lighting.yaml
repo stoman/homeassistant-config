@@ -5,7 +5,6 @@ adaptive_lighting:
       - light.arbeitszimmer
       - light.hobbyzimmer
       - light.schlafzimmer
-      - light.schrankzimmer
       - light.toilette
       - light.wohnzimmer
     min_brightness: 30
@@ -20,6 +19,7 @@ adaptive_lighting:
       - light.flur_keller
       - light.flur_oben
       - light.lampe_kuche
+      - light.schrankzimmer
       - light.vorratskeller
       - light.waschkuche
       - light.windfang
