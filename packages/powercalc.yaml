@@ -15,6 +15,13 @@ powercalc:
           name: Router fritz2
           fixed:
             power: 9.7 # Measured manually
+        - entity_id: binary_sensor.pi_hole_status # Pihole server on a raspberry pi
+          name: Pi-Hole
+          fixed:
+            power: 2.4 # Measured manually
+    - create_group: Smart devices
+      unique_id: smart_devices
+      entities:
         - entity_id: sensor.dummy # HomeAssistant server
           unique_id: home_assistant
           name: Home Assistant
@@ -28,10 +35,21 @@ powercalc:
           name: Philipps Hue Bridge
           fixed:
             power: 2.6 # Measured manually
-        - entity_id: binary_sensor.pi_hole_status # Pihole server on a raspberry pi
-          name: Pi-Hole
-          fixed:
-            power: 2.4 # Measured manually
+        # Shelly devices
+        - power_sensor_id: sensor.arbeitsplatz_anna_device_power
+          energy_sensor_id: sensor.arbeitsplatz_anna_device_energy
+        - power_sensor_id: sensor.arbeitsplatz_stefan_device_power
+          energy_sensor_id: sensor.arbeitsplatz_stefan_device_energy
+        - power_sensor_id: sensor.hobbyzimmer_device_power
+          energy_sensor_id: sensor.hobbyzimmer_device_energy
+        - power_sensor_id: sensor.kuhlschrank_device_power
+          energy_sensor_id: sensor.kuhlschrank_device_energy
+        - power_sensor_id: sensor.multimedia_device_power
+          energy_sensor_id: sensor.multimedia_device_energy
+        - power_sensor_id: sensor.nahplatz_device_power
+          energy_sensor_id: sensor.nahplatz_device_energy
+        - power_sensor_id: sensor.staubsauger_device_power
+          energy_sensor_id: sensor.staubsauger_device_energy
     # Create energy sensor for power defined below
     - entity_id: sensor.dummy
       unique_id: other
@@ -47,7 +65,7 @@ template:
   - sensor:
       - name: other_power
         unique_id: other_power
-        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float - states('sensor.arbeitsplatz_stefan_power') | float - states('sensor.hobbyzimmer_power') | float - states('sensor.kuchenkleingerate_power') | float - states('sensor.kuhlschrank_power') | float - states('sensor.multimedia_power') | float - states('sensor.nahplatz_power') | float - states('sensor.staubsauger_power') | float - states('sensor.waschmaschine_power') | float + states('sensor.hoymiles_gateway_solarh_2059950_real_power') | float}}"
+        state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float - states('sensor.arbeitsplatz_stefan_power') | float - states('sensor.hobbyzimmer_power') | float - states('sensor.kuchenkleingerate_power') | float - states('sensor.kuhlschrank_power') | float - states('sensor.multimedia_power') | float - states('sensor.nahplatz_power') | float - states('sensor.staubsauger_power') | float - states('sensor.waschmaschine_power') | float - states('sensor.smart_devices_power') | float + states('sensor.hoymiles_gateway_solarh_2059950_real_power') | float}}"
         device_class: energy
         state_class: measurement
         unit_of_measurement: W
