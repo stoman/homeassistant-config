@@ -17,5 +17,5 @@ action:
         - light.nahzimmer
   - service: scene.turn_on
     target:
-      entity_id: scene.nahzimmer_entspannen
+      entity_id: scene.nahzimmer_lesen
 mode: single
