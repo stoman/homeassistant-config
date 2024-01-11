@@ -19,7 +19,7 @@ trigger:
 action:
   - service: media_player.play_media
     target:
-      entity_id: all
+      entity_id: media_player.wohnzimmer
     data:
       media_content_id: >-
         media-source://tts/tts.piper?message={{ trigger.id | urlencode }}&language=de_DE&voice=de_DE-eva_k-x_low
