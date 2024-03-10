@@ -10,7 +10,6 @@ from datetime import timedelta
 from typing import Any
 
 import homeassistant.helpers.config_validation as cv
-import homeassistant.helpers.device_registry as dr
 import homeassistant.helpers.entity_registry as er
 import voluptuous as vol
 from homeassistant.components.sensor import DOMAIN as SENSOR_DOMAIN
@@ -46,6 +45,7 @@ from .common import (
     validate_name_pattern,
 )
 from .const import (
+    CONF_ALL,
     CONF_AND,
     CONF_AREA,
     CONF_CALCULATION_ENABLED_CONDITION,
@@ -70,6 +70,7 @@ from .const import (
     CONF_HIDE_MEMBERS,
     CONF_IGNORE_UNAVAILABLE_STATE,
     CONF_INCLUDE,
+    CONF_INCLUDE_NON_POWERCALC_SENSORS,
     CONF_LINEAR,
     CONF_MANUFACTURER,
     CONF_MODE,
@@ -121,13 +122,13 @@ from .const import (
     SensorType,
     UnitPrefix,
 )
+from .device_binding import attach_entities_to_source_device, bind_config_entry_to_device
 from .errors import (
     PowercalcSetupError,
     SensorAlreadyConfiguredError,
     SensorConfigurationError,
 )
 from .group_include.include import resolve_include_entities
-from .sensors.abstract import BaseEntity
 from .sensors.daily_energy import (
     DAILY_FIXED_ENERGY_SCHEMA,
     create_daily_fixed_energy_power_sensor,
@@ -154,10 +155,11 @@ MAX_GROUP_NESTING_LEVEL = 5
 
 FILTER_CONFIG = vol.Schema(
     {
+        vol.Optional(CONF_ALL): None,
         vol.Optional(CONF_AREA): cv.string,
         vol.Optional(CONF_GROUP): cv.entity_id,
         vol.Optional(CONF_TEMPLATE): cv.template,
-        vol.Optional(CONF_DOMAIN): cv.string,
+        vol.Optional(CONF_DOMAIN): vol.Any(vol.All(cv.ensure_list, [cv.string]), cv.string),
         vol.Optional(CONF_WILDCARD): cv.string,
     },
 )
@@ -214,6 +216,7 @@ SENSOR_CONFIG = {
                     vol.Optional(CONF_AND): vol.All(cv.ensure_list, [FILTER_CONFIG]),
                 },
             ),
+            vol.Optional(CONF_INCLUDE_NON_POWERCALC_SENSORS, default=True): cv.boolean,
         },
     ),
     vol.Optional(CONF_IGNORE_UNAVAILABLE_STATE): cv.boolean,
@@ -319,6 +322,9 @@ async def async_setup_entry(
     """Setup sensors from config entry (GUI config flow)."""
     sensor_config = convert_config_entry_to_sensor_config(entry)
     sensor_type = entry.data.get(CONF_SENSOR_TYPE)
+
+    bind_config_entry_to_device(hass, entry)
+
     if sensor_type == SensorType.GROUP:
         global_config: dict = hass.data[DOMAIN][DOMAIN_CONFIG]
         merged_sensor_config = get_merged_sensor_configuration(
@@ -481,25 +487,25 @@ def register_entity_services() -> None:
 
     platform.async_register_entity_service(
         SERVICE_CALIBRATE_UTILITY_METER,
-        {vol.Required(CONF_VALUE): validate_is_number},  # type: ignore
+        {vol.Required(CONF_VALUE): validate_is_number},
         "async_calibrate",
     )
 
     platform.async_register_entity_service(
         SERVICE_CALIBRATE_ENERGY,
-        {vol.Required(CONF_VALUE): validate_is_number},  # type: ignore
+        {vol.Required(CONF_VALUE): validate_is_number},
         "async_calibrate",
     )
 
     platform.async_register_entity_service(
         SERVICE_INCREASE_DAILY_ENERGY,
-        {vol.Required(CONF_VALUE): validate_is_number},  # type: ignore
+        {vol.Required(CONF_VALUE): validate_is_number},
         "async_increase",
     )
 
     platform.async_register_entity_service(
         SERVICE_ACTIVATE_PLAYBOOK,
-        {vol.Required("playbook_id"): cv.string},  # type: ignore
+        {vol.Required("playbook_id"): cv.string},
         "async_activate_playbook",
     )
 
@@ -511,7 +517,7 @@ def register_entity_services() -> None:
 
     platform.async_register_entity_service(
         SERVICE_SWITCH_SUB_PROFILE,
-        {vol.Required("profile"): cv.string},  # type: ignore
+        {vol.Required("profile"): cv.string},
         "async_switch_sub_profile",
     )
 
@@ -677,10 +683,11 @@ async def create_sensors(  # noqa: C901
             _LOGGER.error(error)
 
     if not entities_to_add.has_entities():
-        exception_message = "Could not resolve any entities"
+        log_message = "Could not resolve any entities"
         if CONF_CREATE_GROUP in config:
-            exception_message += f" in group '{config.get(CONF_CREATE_GROUP)}'"
-        raise SensorConfigurationError(exception_message)
+            log_message += f" in group '{config.get(CONF_CREATE_GROUP)}'"
+        _LOGGER.warning(log_message)
+        return entities_to_add
 
     # Create group sensors (power, energy, utility)
     if CONF_CREATE_GROUP in config:
@@ -801,33 +808,6 @@ async def create_individual_sensors(
     return EntitiesBucket(new=entities_to_add, existing=[])
 
 
-async def attach_entities_to_source_device(
-    config_entry: ConfigEntry | None,
-    entities_to_add: list[Entity],
-    hass: HomeAssistant,
-    source_entity: SourceEntity,
-) -> None:
-    """Set the entity to same device as the source entity, if any available."""
-    if source_entity.entity_entry and source_entity.device_entry:
-        device_id = source_entity.device_entry.id
-        device_registry = dr.async_get(hass)
-        for entity in (
-            entity for entity in entities_to_add if isinstance(entity, BaseEntity)
-        ):
-            try:
-                entity.source_device_id = source_entity.device_entry.id  # type: ignore
-            except AttributeError:  # pragma: no cover
-                _LOGGER.error("%s: Cannot set device id on entity", entity.entity_id)
-        if (
-            config_entry
-            and config_entry.entry_id not in source_entity.device_entry.config_entries
-        ):
-            device_registry.async_update_device(
-                device_id,
-                add_config_entry_id=config_entry.entry_id,
-            )
-
-
 async def check_entity_not_already_configured(
     sensor_config: dict,
     source_entity: SourceEntity,
@@ -862,7 +842,7 @@ class EntitiesBucket:
         self.new.extend(bucket.new)
         self.existing.extend(bucket.existing)
 
-    def all(self) -> list[Entity]:  # noqa: A003
+    def all(self) -> list[Entity]:
         """Return all entities both new and existing"""
         return self.new + self.existing
 
