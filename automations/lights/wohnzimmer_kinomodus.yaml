@@ -2,6 +2,18 @@
 id: f86bade4-38f7-4744-8d0a-13b2bdbc6a7a
 alias: Wohnzimmer Kinomodus
 trigger:
+  # Triggers for the YouTube app
+  - platform: state
+    entity_id:
+      - media_player.wohnzimmer_tv
+    to: "playing"
+    id: start_playing
+  - platform: state
+    entity_id:
+      - media_player.wohnzimmer_tv
+    to: "paused"
+    id: stop_playing
+  # Triggers for the RTL app
   - platform: state
     entity_id:
       - media_player.wohnzimmer_tv
@@ -45,8 +57,6 @@ action:
               - stop_playing
         sequence:
           - service: light.turn_on
-            data:
-              transition: 5
             target:
               entity_id:
                 - light.lichtschlauch_wohnzimmerregal
