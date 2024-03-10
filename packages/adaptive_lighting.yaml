@@ -7,7 +7,13 @@ adaptive_lighting:
       - light.hobbyzimmer
       - light.schlafzimmer
       - light.toilette
+      # Wohnzimmer
       - light.wohnzimmer
+      - light.lampe_esstisch
+      - light.lampe_esszimmer
+      - light.lampe_flur
+      - light.lampe_sofa
+      - light.lichtschlauch_wohnzimmerregal
     min_brightness: 30
     max_brightness: 100
     max_sunrise_time: "08:00:00"
