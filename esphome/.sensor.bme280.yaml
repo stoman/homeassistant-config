@@ -10,7 +10,7 @@ i2c:
   scan: true
 
 sensor:
-  - platform: bme280
+  - platform: bme280_i2c
     temperature:
       name: "${prefix} Temperatur"
       oversampling: 16x
