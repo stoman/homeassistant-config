@@ -15,7 +15,9 @@ action:
     target:
       entity_id:
         - switch.kuhlschrank
-  - service: notify.notify
+  - service: script.durchsage
     data:
+      announcement: true
+      notification: true
       message: Kühlschrank war deaktiviert und wird wieder eingeschaltet.
 mode: single

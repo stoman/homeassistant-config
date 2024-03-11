@@ -15,11 +15,9 @@ trigger:
     to: "home"
     id: "Willkommen Zuhause Stefan"
 action:
-  - service: media_player.play_media
-    target:
-      entity_id: media_player.wohnzimmer
+  - service: script.durchsage
     data:
-      media_content_id: >-
-        media-source://tts/tts.piper?message={{ trigger.id | urlencode }}&language=de_DE&voice=de_DE-eva_k-x_low
-      media_content_type: provider
+      announcement: true
+      notification: false
+      message: "{{ trigger.id }}"
 mode: single

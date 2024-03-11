@@ -8,15 +8,10 @@ trigger:
       minutes: 5
     above: 50
 action:
-  - service: tts.google_translate_say
+  - service: script.durchsage
     data:
-      entity_id: media_player.wohnzimmer
-      cache: true
-      message: Wir schenken den Stadtwerken Strom! Bitte etwas einschalten!
-      language: de
-  - service: notify.notify
-    data:
-      title: "Die Sonne scheint stark! \U0001F31E"
+      announcement: true
+      notification: true
       message: Wir schenken den Stadtwerken Strom! Können wir jetzt einen
-        Stromverbraucher einschalten, der sowieso irgendwann laufen muss?
+        Stromverbraucher einschalten, der sowieso irgendwann laufen sollte?
 mode: single

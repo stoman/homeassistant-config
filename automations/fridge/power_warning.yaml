@@ -12,7 +12,9 @@ trigger:
       minutes: 0
       seconds: 0
 action:
-  - service: notify.notify
+  - service: script.durchsage
     data:
+      announcement: true
+      notification: true
       message: Kühlschrank hat einen unerwartet geringen Stromverbrauch. Bitte prüfen.
 mode: single
