@@ -38,7 +38,7 @@ Devices we collected at home include:
 - ESP32-Cam boards for reading water and gas meters
 - "Volkszähler" for reading the power meter
 - Roborock S7 Plus
-- [Idasen height-adjustable desk](esphome/.sensor.idasen.yaml)
+- Idasen height-adjustable desk
 - Raspberry Pi 3B running Pi-hole
 - Shelly Plug Plus S for measuring power consumption and Shelly Plug 2 for high wattage devices
 
