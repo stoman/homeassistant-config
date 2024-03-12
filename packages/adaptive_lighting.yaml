@@ -1,4 +1,11 @@
 ---
+light:
+  - platform: group
+    name: "Lampen Sofa"
+    unique_id: "93fd2964-5a9d-4071-9b7e-3a905110fcbd"
+    entities:
+      - light.lampe_sofa
+      - light.lichtschlauch_wohnzimmerregal
 adaptive_lighting:
   - name: "dark"
     lights:
@@ -13,6 +20,7 @@ adaptive_lighting:
       - light.lampe_esszimmer
       - light.lampe_flur
       - light.lampe_sofa
+      - light.lampen_sofa
       - light.lichtschlauch_wohnzimmerregal
     min_brightness: 30
     max_brightness: 100

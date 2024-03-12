@@ -85,7 +85,7 @@ trigger:
       id: lichtschalter_wohnzimmer_sofa_button
       type: initial_press
       subtype: 1
-    id: wohnzimmer
+    id: lampen_sofa
   - platform: event
     event_type: hue_event
     event_data:
