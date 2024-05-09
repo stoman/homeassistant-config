@@ -1,0 +1,27 @@
+---
+id: "6994ef61-e815-41b7-8c06-25529c8e4970"
+alias: Luftreiniger einschalten
+trigger:
+  - platform: numeric_state
+    entity_id:
+      - sensor.infeed_power
+    for:
+      minutes: 1
+    above: 40
+  - platform: time
+    at: "11:00:00"
+condition:
+  - condition: state
+    entity_id: fan.luftreiniger
+    state: "off"
+  - condition: time
+    after: "10:59:59"
+    before: "23:00:00"
+  - condition: numeric_state
+    entity_id: sensor.infeed_power
+    above: 40
+action:
+  - service: fan.turn_on
+    target:
+      entity_id: fan.luftreiniger
+mode: single
