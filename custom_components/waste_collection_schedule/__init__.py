@@ -41,6 +41,8 @@ CONF_PICTURE = "picture"
 CONF_USE_DEDICATED_CALENDAR = "use_dedicated_calendar"
 CONF_DEDICATED_CALENDAR_TITLE = "dedicated_calendar_title"
 
+CONF_DAY_OFFSET = "day_offset"
+
 CUSTOMIZE_CONFIG = vol.Schema(
     {
         vol.Optional(CONF_TYPE): cv.string,
@@ -61,6 +63,7 @@ SOURCE_CONFIG = vol.Schema(
             cv.ensure_list, [CUSTOMIZE_CONFIG]
         ),
         vol.Optional(CONF_SOURCE_CALENDAR_TITLE): cv.string,
+        vol.Optional(CONF_DAY_OFFSET, default=0): vol.Coerce(int),
     }
 )
 
@@ -107,11 +110,13 @@ async def async_setup(hass: HomeAssistant, config: dict):
                 use_dedicated_calendar=c.get(CONF_USE_DEDICATED_CALENDAR, False),
                 dedicated_calendar_title=c.get(CONF_DEDICATED_CALENDAR_TITLE, False),
             )
-        api.add_source_shell(
-            source_name=source[CONF_SOURCE_NAME],
-            customize=customize,
-            calendar_title=source.get(CONF_SOURCE_CALENDAR_TITLE),
-            source_args=source.get(CONF_SOURCE_ARGS, {}),
+        await hass.async_add_executor_job(
+            api.add_source_shell,
+            source[CONF_SOURCE_NAME],
+            customize,
+            source.get(CONF_SOURCE_ARGS, {}),
+            source.get(CONF_SOURCE_CALENDAR_TITLE),
+            source.get(CONF_DAY_OFFSET, 0),
         )
 
     # store api object
@@ -191,17 +196,14 @@ class WasteCollectionApi:
         return self._day_switch_time
 
     def add_source_shell(
-        self,
-        source_name,
-        customize,
-        source_args,
-        calendar_title,
+        self, source_name, customize, source_args, calendar_title, day_offset
     ):
         new_shell = SourceShell.create(
             source_name=source_name,
             customize=customize,
             source_args=source_args,
             calendar_title=calendar_title,
+            day_offset=day_offset,
         )
 
         if new_shell:
@@ -224,7 +226,9 @@ class WasteCollectionApi:
     def _fetch_callback(self, *_):
         async_call_later(
             self._hass,
-            randrange(0, 60 * self._random_fetch_time_offset),
+            randrange(0, 60 * self._random_fetch_time_offset)
+            if self._random_fetch_time_offset > 0
+            else 0,
             self._fetch_now_callback,
         )
 

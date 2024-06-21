@@ -1,5 +1,6 @@
 import json
 import os
+from typing import Any, cast
 
 from homeassistant.core import HomeAssistant
 
@@ -21,8 +22,13 @@ class LocalLoader(Loader):
     async def get_manufacturer_listing(self, device_type: DeviceType | None) -> set[str]:
         """Get listing of available manufacturers."""
 
+        def _find_manufacturer_directories() -> set[str]:
+            return set(next(os.walk(self._data_directory))[1])
+
+        manufacturer_dirs = await self._hass.async_add_executor_job(_find_manufacturer_directories)  # type: ignore[arg-type]
+
         manufacturers: set[str] = set()
-        for manufacturer in next(os.walk(self._data_directory))[1]:
+        for manufacturer in manufacturer_dirs:
             models = await self.get_model_listing(manufacturer, device_type)
             if not models:
                 continue
@@ -36,11 +42,17 @@ class LocalLoader(Loader):
         manufacturer_dir = os.path.join(self._data_directory, manufacturer)
         if not os.path.exists(manufacturer_dir):
             return models
-        for model in os.listdir(manufacturer_dir):
+        for model in await self._hass.async_add_executor_job(os.listdir, manufacturer_dir):
             if model[0] in [".", "@"]:
                 continue
-            with open(os.path.join(manufacturer_dir, model, "model.json")) as f:
-                model_json = json.load(f)
+
+            def _load_model_json(model_name: str) -> dict[str, Any]:
+                """Load model.json file for a given model."""
+                with open(os.path.join(manufacturer_dir, model_name, "model.json")) as f:
+                    return cast(dict[str, Any], json.load(f))
+
+            model_json = await self._hass.async_add_executor_job(_load_model_json, model)
+
             supported_device_type = DeviceType(model_json.get("device_type", DeviceType.LIGHT))
             if device_type and device_type != supported_device_type:
                 continue
@@ -62,14 +74,20 @@ class LocalLoader(Loader):
         if not model_json_path or not os.path.exists(model_json_path):
             raise LibraryLoadingError(f"model.json not found for {manufacturer} {model}")
 
-        with open(model_json_path) as file:
-            return json.load(file), base_dir
+        def _load_json() -> dict[str, Any]:
+            """Load model.json file for a given model."""
+            with open(model_json_path) as file:
+                return cast(dict[str, Any], json.load(file))
+
+        model_json = await self._hass.async_add_executor_job(_load_json)  # type: ignore
+        return model_json, base_dir
 
     async def find_model(self, manufacturer: str, search: set[str]) -> str | None:
         manufacturer_dir = os.path.join(self._data_directory, manufacturer)
         if not os.path.exists(manufacturer_dir):
             return None
-        model_dirs = os.listdir(manufacturer_dir)
+
+        model_dirs = await self._hass.async_add_executor_job(os.listdir, manufacturer_dir)
         for model in search:
             if model in model_dirs:
                 return model
