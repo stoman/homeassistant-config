@@ -12,6 +12,5 @@ action:
     data:
       announcement: true
       notification: true
-      message: Wir schenken den Stadtwerken Strom! Können wir jetzt einen
-        Stromverbraucher einschalten, der sowieso irgendwann laufen sollte?
+      message: Wir schenken den Stadtwerken Strom!
 mode: single
