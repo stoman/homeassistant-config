@@ -17,7 +17,7 @@ jobs:
         version: ["stable", "beta", "dev"]
     steps:
       - name: Check out configuration from GitHub
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
       - name: Remove http configuration as this can't be tested without certificates
         uses: mikefarah/yq@master
         with:
@@ -34,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out configuration from GitHub
-        uses: actions/checkout@v4.1.7
+        uses: actions/checkout@v4.2.0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
