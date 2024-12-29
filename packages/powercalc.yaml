@@ -68,8 +68,10 @@ template:
         state: "{{ states('sensor.tasmota_main_power') | float - states('sensor.all_light_power') | float - states('sensor.networking_devices_power') | float - states('sensor.arbeitsplatz_anna_power') | float - states('sensor.arbeitsplatz_stefan_power') | float - states('sensor.hobbyzimmer_power') | float - states('sensor.kuchenkleingerate_power') | float - states('sensor.kuhlschrank_power') | float - states('sensor.multimedia_power') | float - states('sensor.nahplatz_power') | float - states('sensor.staubsauger_power') | float - states('sensor.waschmaschine_power') | float - states('sensor.smart_devices_power') | float + states('sensor.hoymiles_gateway_solarh_2059950_real_power') | float}}"
         device_class: power
         unit_of_measurement: W
+        state_class: measurement
       - name: infeed_power
         unique_id: infeed_power
         state: "{{ 0 if states('sensor.tasmota_main_power') | float > 0 else states('sensor.tasmota_main_power') | float * -1}}"
         device_class: power
         unit_of_measurement: W
+        state_class: measurement
