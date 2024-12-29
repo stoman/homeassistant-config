@@ -7,11 +7,67 @@ cast_dashbord:
       view_path: home
     action: cast.show_lovelace_view
   mode: single
-test:
-  alias: Test
-  sequence:
-  - service: script.durchsage
-    metadata: {}
-    data:
-      announcement: true
+durchsage:
+  alias: Durchsage
+  icon: mdi:bullhorn
+  fields:
+    message:
+      selector:
+        text:
+      name: Message
+    notification:
+      selector:
+        boolean: {}
+      name: Notification
+      description: Whether to send notifications to mobile phones
+      required: true
+    announcement:
+      selector:
+        boolean: {}
+      name: Announcement
+      description: Whether to make a voice announcement
+      default: true
+      required: true
   mode: single
+  sequence:
+  - if:
+    - condition: template
+      value_template: '{{ announcement }}'
+    - condition: time
+      after: '10:30:00'
+      before: '23:00:00'
+    then:
+    - alias: Save original volume
+      variables:
+        original_volume: '{{ state_attr(''media_player.wohnzimmer'', ''volume_level'')
+          }}'
+    - data:
+        volume_level: 0.6
+      target:
+        entity_id: media_player.wohnzimmer
+      action: media_player.volume_set
+    - target:
+        entity_id: tts.piper
+      data:
+        cache: false
+        media_player_entity_id: media_player.wohnzimmer
+        message: '{{ message }}'
+      action: tts.speak
+    - if:
+      - condition: template
+        value_template: '{{ original_volume is not none }}'
+      then:
+      - delay:
+          seconds: 5
+      - data:
+          volume_level: '{{ original_volume }}'
+        target:
+          entity_id: media_player.wohnzimmer
+        action: media_player.volume_set
+  - if:
+    - condition: template
+      value_template: '{{ notification }}'
+    then:
+    - data:
+        message: '{{ message }}'
+      action: notify.notify

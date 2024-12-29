@@ -10,13 +10,13 @@ I hope something can be a useful inspiration for others. If you find this useful
 
 ## Highlights
 
-- [Coffee machine switching on when the toothbrush is used in the morning](automations/coffee.yaml)
+- Coffee machine switching on when the toothbrush is used in the morning
 - [Power meter readings via Tasmota](packages/tasmota_smart_meter.yaml) from an EMH ED300S power meter
-- [Cinema mode: switch lights off or on when a movie starts or finishes](automations/lights/wohnzimmer_kinomodus.yaml)
-- [Physical light switches](automations/lights/) for [adaptive lighting](packages/adaptive_lighting.yaml) to support the circadian rythm using light.
-- [Detection of fridge malfunction](automations/fridge/) in case of suspiciously low power consumption or a switch being disabled
+- Cinema mode: switch lights off or on when a movie starts or finishes
+- Physical light switches for adaptive lighting to support the circadian rythm using light.
+- Detection of fridge malfunction](automations/fridge/) in case of suspiciously low power consumption or a switch being disabled
 - Temperature and humidity sensors for ESP devices: [BME280](esphome/.sensor.bme280.yaml), [DHT22](esphome/.sensor.dht22.yaml)
-- A [script for announcements that can be re-used across automations](scripts/durchsage.yaml)
+- A script for announcements that can be re-used across automations
 - [Waste collection schedule from Abfallwirtschaftsbetrieb München (AWM)](packages/waste_collection_schedule.yaml)
 
 ## Hardware
