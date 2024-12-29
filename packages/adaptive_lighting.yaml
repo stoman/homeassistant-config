@@ -11,7 +11,6 @@ adaptive_lighting:
     lights:
       - light.arbeitszimmer
       - light.bad
-      - light.hobbyzimmer
       - light.schlafzimmer
       - light.toilette
       # Wohnzimmer
@@ -39,6 +38,7 @@ adaptive_lighting:
       - light.vorratskeller
       - light.waschkuche
       - light.windfang
+      - light.hobbyzimmer
     min_brightness: 75
     max_brightness: 100
     max_sunrise_time: "08:00:00"

@@ -1,9 +1,17 @@
 cast_dashbord:
   alias: Cast Dashbord
   sequence:
-  - service: cast.show_lovelace_view
-    data:
-      entity_id: media_player.wohnzimmer_hub
-      dashboard_path: dashboard-dasboard
+  - data:
+      entity_id: media_player.wohnzimmer
+      dashboard_path: dashboard-wohnzimmer
       view_path: home
+    action: cast.show_lovelace_view
+  mode: single
+test:
+  alias: Test
+  sequence:
+  - service: script.durchsage
+    metadata: {}
+    data:
+      announcement: true
   mode: single

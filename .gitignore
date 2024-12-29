@@ -1,6 +1,9 @@
+.cloud/
 .shopping_list.json
 .storage
 **/__pycache__/**
+blueprints/template/
 home-assistant*
+image/
 secrets.yaml
 tts
