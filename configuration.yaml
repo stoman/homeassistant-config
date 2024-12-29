@@ -15,19 +15,3 @@ scene split: !include_dir_list scenes
 
 homeassistant:
   packages: !include_dir_named packages
-  external_url: "https://flamingossistant.duckdns.org:8123"
-
-# http:
-# use_x_forwarded_for: true
-# trusted_proxies:
-#   - 172.30.32.1
-# ssl_certificate: /ssl/fullchain.pem
-# ssl_key: /ssl/privkey.pem
-
-sensor:
-  # Required for wake up light
-  - platform: time_date
-    display_options:
-      - "time"
-      - "date"
-      - "date_time_iso"
