@@ -15,8 +15,8 @@ api:
     key: ${api_key}
 
 ota:
-  platform: esphome
-  password: ${ota_password}
+  - platform: esphome
+    password: ${ota_password}
 
 wifi:
   ssid: ${wifi_ssid}
