@@ -1,0 +1,98 @@
+- id: 763a7ac0-0068-499e-bcc9-d6ce3d9df39f
+  name: Essen
+  entities:
+    light.lampe_esszimmer:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      - prism
+      - sparkle
+      - opal
+      - glisten
+      - unknown
+      - unknown
+      - unknown
+      - unknown
+      - sunrise
+      - sunset
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: None
+      color_mode: xy
+      brightness: 255
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 7.156
+      - 85.49
+      rgb_color:
+      - 255
+      - 63
+      - 37
+      xy_color:
+      - 0.6697
+      - 0.3125
+      mode: normal
+      dynamics: none
+      friendly_name: Lampe Esszimmer
+      supported_features: 44
+      state: 'on'
+    light.lampe_esstisch:
+      min_color_temp_kelvin: 2000
+      max_color_temp_kelvin: 6535
+      min_mireds: 153
+      max_mireds: 500
+      effect_list:
+      - None
+      - candle
+      - fire
+      - prism
+      - sparkle
+      - opal
+      - glisten
+      - unknown
+      - unknown
+      - unknown
+      - unknown
+      - sunrise
+      - sunset
+      supported_color_modes:
+      - color_temp
+      - xy
+      effect: None
+      color_mode: color_temp
+      brightness: 255
+      color_temp_kelvin: 2173
+      color_temp: 460
+      hs_color:
+      - 29.895
+      - 85.88
+      rgb_color:
+      - 255
+      - 145
+      - 36
+      xy_color:
+      - 0.581
+      - 0.388
+      mode: normal
+      dynamics: none
+      friendly_name: Lampe Esstisch
+      supported_features: 44
+      state: 'on'
+    light.lichterkette:
+      supported_color_modes:
+      - onoff
+      color_mode: onoff
+      mode: normal
+      dynamics: none
+      friendly_name: Lichterkette
+      supported_features: 0
+      state: 'on'
+  icon: mdi:food
+  metadata: {}

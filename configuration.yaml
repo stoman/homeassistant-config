@@ -9,9 +9,6 @@ recorder:
 
 automation: !include automations.yaml
 script: !include scripts.yaml
-script split: !include_dir_list scripts
 scene: !include scenes.yaml
-scene split: !include_dir_list scenes
-
 homeassistant:
   packages: !include_dir_named packages
