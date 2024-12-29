@@ -103,9 +103,7 @@ class Source:
                 for delay in DELAYS:
                     if delay in item["description"]:
                         day_offset = DELAYS[delay]
-                dt = datetime.strptime(
-                    item["date"], "%Y-%m-%dT00:00:00.0000000Z"
-                ).date()
+                dt = datetime.strptime(item["date"].split("T")[0], "%Y-%m-%d").date()
                 holidays.update(
                     {
                         i: {
@@ -120,6 +118,9 @@ class Source:
                 i += 1
 
         # Cycle through schedule and holidays incorporating delays
+        # According to Republic Waste "Holidays typically push our residential pickup 
+        # schedules back one day with regular schedules resuming the following week."
+        # Source: https://www.republicservices.com/customer-support/faq
         while True:
             changes = 0
             for holiday in holidays:
@@ -128,8 +129,10 @@ class Source:
                     d = holidays[holiday]["delay"]
                     for pickup in schedule:
                         p = schedule[pickup]["date"]
-                        date_difference = (p - h).days
-                        if date_difference <= 5 and date_difference >= 0:
+                        # Calculate the next Sunday since Sunday should reset the
+                        # scheduled pickup date
+                        ns = h + timedelta(days=6 - h.weekday())
+                        if h <= p < ns:
                             revised_date = p + timedelta(days=d)
                             schedule[pickup]["date"] = revised_date
                             holidays[holiday]["incorporated"] = True
