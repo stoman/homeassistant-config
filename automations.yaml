@@ -1,1 +1,742 @@
-[]
+- id: "1730719176903"
+  alias: Brudi allein zuhause
+  description: ""
+  triggers:
+    - trigger: state
+      entity_id:
+        - zone.home
+      to: "0"
+  conditions:
+    - alias: Letzter Reiningungsbeginn vor 2 Tagen
+      condition: template
+      value_template:
+        "{{ now() - as_datetime(states('sensor.brudi_letzter_reinigungsbeginn'))
+        > timedelta(hours=36) }}"
+    - condition: device
+      device_id: 2eaf2281949db210683b1b6232825653
+      domain: vacuum
+      entity_id: f9e53740ef931d6bcc27511a79225b4b
+      type: is_docked
+    - condition: numeric_state
+      entity_id: vacuum.brudi
+      attribute: battery_level
+      above: 50
+    - condition: time
+      after: 08:00:00
+      before: "20:00:00"
+  actions:
+    - device_id: 2eaf2281949db210683b1b6232825653
+      domain: vacuum
+      entity_id: f9e53740ef931d6bcc27511a79225b4b
+      type: clean
+    - action: script.durchsage
+      data:
+        notification: true
+        announcement: true
+        message: Der Hauself kommt und putzt während alle unterwegs sind!
+  mode: single
+  # Always keep the fridge switched on. Notify if someone turned it off accidentally.
+- id: "97120b7c-481f-4899-8b2e-7960047f12cc"
+  alias: Kühlschrank immer einschalten
+  trigger:
+    - platform: state
+      entity_id: switch.kuhlschrank
+      to: "off"
+      for:
+        hours: 0
+        minutes: 0
+        seconds: 10
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.kuhlschrank
+    - service: script.durchsage
+      data:
+        announcement: true
+        notification: true
+        message: Kühlschrank war deaktiviert und wird wieder eingeschaltet.
+  mode: single
+  # If the fridge is consuming less power than expected send a warning.
+- id: "84aa0cd5-0784-4b79-8b24-490f9d917c3b"
+  alias: Kühlschrank Stromverbrauch Warnung
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.kuhlschrank_power
+      below: 10
+      # No consumption for up to 40 minutes is regular behavior.
+      for:
+        hours: 1
+        minutes: 0
+        seconds: 0
+  action:
+    - service: script.durchsage
+      data:
+        announcement: true
+        notification: true
+        message: Kühlschrank hat einen unerwartet geringen Stromverbrauch. Bitte prüfen.
+  mode: single
+- id: "4ca73738-3646-4a06-a127-6bc9ef15cef9"
+  alias: Licht Arbeitszimmer Taste 2
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_arbeitszimmer_button
+        type: initial_press
+        subtype: 2
+  action:
+    - if:
+        - condition: state
+          entity_id: light.arbeitszimmer
+          state: "on"
+      then:
+        - service: light.turn_on
+          target:
+            entity_id:
+              - light.arbeitszimmer
+          data_template:
+            brightness: "{{states.light.arbeitszimmer.attributes.brightness + 50}}"
+  mode: single
+- id: "db35930b-e077-4f67-92ae-fdee812205f1"
+  alias: Licht Arbeitszimmer Taste 3
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_arbeitszimmer_button
+        type: initial_press
+        subtype: 3
+  action:
+    - if:
+        - condition: state
+          entity_id: light.arbeitszimmer
+          state: "on"
+      then:
+        - service: light.turn_on
+          target:
+            entity_id:
+              - light.arbeitszimmer
+          data_template:
+            brightness: "{{states.light.arbeitszimmer.attributes.brightness - 50}}"
+  mode: single
+- id: "a773fa36-942b-4063-a404-69f5ce68cf9f"
+  alias: Lichtschalter
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_arbeitszimmer_button
+        type: initial_press
+        subtype: 1
+      id: arbeitszimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_bad_button
+        type: initial_press
+        subtype: 1
+      id: bad
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_flur_oben_button
+        type: initial_press
+        subtype: 1
+      id: flur_oben
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_hobbyzimmer_button
+        type: initial_press
+        subtype: 1
+      id: hobbyzimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_kuche_button
+        type: initial_press
+        subtype: 1
+      id: lampe_arbeitsflache
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_kuche_button
+        type: initial_press
+        subtype: 2
+      id: lampe_kuche
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_nahzimmer_button
+        type: initial_press
+        subtype: 1
+      id: nahzimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_schlafzimmer_button
+        type: initial_press
+        subtype: 1
+      id: schlafzimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_schlafzimmer_button
+        type: initial_press
+        subtype: 1
+      id: schlafzimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_schrankzimmer_button
+        type: initial_press
+        subtype: 1
+      id: schrankzimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_toilette_button
+        type: initial_press
+        subtype: 1
+      id: toilette
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_sofa_button
+        type: initial_press
+        subtype: 1
+      id: lampen_sofa
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_tur_button
+        type: initial_press
+        subtype: 1
+      id: flur_keller
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_tur_button
+        type: initial_press
+        subtype: 2
+      id: wohnzimmer
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_treppe_button
+        type: initial_press
+        subtype: 1
+      id: flur_oben
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_treppe_button
+        type: initial_press
+        subtype: 2
+      id: wohnzimmer
+  action:
+    - service: light.toggle
+      target:
+        entity_id:
+          - light.{{ trigger.id }}
+  mode: single
+- id: "f2b59cb1-c9e9-4b85-998e-052cf7957cb6"
+  alias: Licht Nähzimmer Taste 4
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_nahzimmer_button
+        type: initial_press
+        subtype: 4
+  action:
+    - service: adaptive_lighting.set_manual_control
+      data:
+        entity_id: switch.adaptive_lighting_light
+        manual_control: true
+        lights:
+          - light.nahzimmer
+    - service: scene.turn_on
+      target:
+        entity_id: scene.nahzimmer_lesen
+  mode: single
+- id: "65e8281c-6645-4866-b504-06866a294a57"
+  alias: Licht Schlafzimmer Taste 2
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_schlafzimmer_button
+        type: initial_press
+        subtype: 2
+  action:
+    - if:
+        - condition: state
+          entity_id: light.schlafzimmer
+          state: "on"
+      then:
+        - service: light.turn_on
+          target:
+            entity_id:
+              - light.schlafzimmer
+          data_template:
+            brightness: "{{states.light.schlafzimmer.attributes.brightness + 50}}"
+  mode: single
+- id: "eda9e512-a286-4b13-8a25-159405c425a3"
+  alias: Licht Schlafzimmer Taste 3
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_schlafzimmer_button
+        type: initial_press
+        subtype: 3
+  action:
+    - if:
+        - condition: state
+          entity_id: light.schlafzimmer
+          state: "on"
+      then:
+        - service: light.turn_on
+          target:
+            entity_id:
+              - light.schlafzimmer
+          data_template:
+            brightness: "{{states.light.schlafzimmer.attributes.brightness - 50}}"
+  mode: single
+- id: "82700968-4d9f-4f60-9e40-01a5a299eb32"
+  alias: Licht Schlafzimmer Taste 4
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_schlafzimmer_button
+        type: initial_press
+        subtype: 4
+  action:
+    - service: adaptive_lighting.set_manual_control
+      data:
+        entity_id: switch.adaptive_lighting_dark
+        manual_control: true
+        lights:
+          - light.schlafzimmer
+    - service: scene.turn_on
+      target:
+        entity_id: scene.schlafzimmer_kuhles_helles_licht
+  mode: single
+- id: 8a5468ef-e8a1-48eb-8f5d-26848022c36c""
+  alias: Stromschalter
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_arbeitszimmer_button
+        type: initial_press
+        subtype: 4
+      id: arbeitsplatz_stefan
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_nahzimmer_button
+        type: initial_press
+        subtype: 2
+      id: nahplatz
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: fernbedienung_nahzimmer_button
+        type: initial_press
+        subtype: 3
+      id: arbeitsplatz_anna
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_sofa_button
+        type: initial_press
+        subtype: 2
+      id: multimedia
+  action:
+    - service: switch.toggle
+      target:
+        entity_id:
+          - switch.{{ trigger.id }}
+  mode: single
+- id: 1789f124-d864-4ef6-bb9f-6102c37f4633""
+  alias: Licht Wohnzimmer Essen
+  trigger:
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_wohnzimmer_essen_button
+        type: initial_press
+        subtype: 1
+  action:
+    - if:
+        - condition: state
+          entity_id: light.wohnzimmer
+          state: "on"
+      then:
+        - service: light.turn_off
+          target:
+            entity_id:
+              - light.wohnzimmer
+      else:
+        - service: adaptive_lighting.set_manual_control
+          data:
+            entity_id: switch.adaptive_lighting_dark
+            manual_control: true
+            lights:
+              - light.lampe_esstisch
+              - light.lampe_esszimmer
+        - service: scene.turn_on
+          target:
+            entity_id: scene.essen
+  mode: single
+- id: f86bade4-38f7-4744-8d0a-13b2bdbc6a7a
+  alias: Wohnzimmer Kinomodus
+  trigger:
+    # Triggers for the YouTube app
+    - platform: state
+      entity_id:
+        - media_player.wohnzimmer_tv
+      to: "playing"
+      id: start_playing
+    - platform: state
+      entity_id:
+        - media_player.wohnzimmer_tv
+      to: "paused"
+      id: stop_playing
+    # Triggers for the RTL app
+    - platform: state
+      entity_id:
+        - media_player.wohnzimmer_tv
+      from: "off"
+      id: start_playing
+    - platform: state
+      entity_id:
+        - media_player.wohnzimmer_tv
+      to: "off"
+      id: stop_playing
+  condition:
+    # Only if the projector is on.
+    - condition: numeric_state
+      entity_id: sensor.multimedia_power
+      above: 100
+  action:
+    - choose:
+        - conditions:
+            - condition: trigger
+              id:
+                - start_playing
+          sequence:
+            - service: light.turn_off
+              target:
+                entity_id: light.wohnzimmer
+            # If Anna is home alone, keep one light on.
+            - if:
+                - condition: state
+                  entity_id: person.anna
+                  state: "home"
+                - condition: state
+                  entity_id: zone.home
+                  state: "1"
+              then:
+                - service: light.turn_on
+                  target:
+                    entity_id: light.lampe_esszimmer
+        - conditions:
+            - condition: trigger
+              id:
+                - stop_playing
+          sequence:
+            - service: light.turn_on
+              target:
+                entity_id:
+                  - light.lichtschlauch_wohnzimmerregal
+                  - light.lampe_sofa
+                  - light.lampe_flur
+  mode: single
+- id: "9a4bbe68-6c6d-4d84-acec-a6f9cf830369"
+  alias: Bewegung im Flur Keller
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bewegungsmelder_flur_keller_bewegung
+      to: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.flur_keller
+    - wait_for_trigger:
+        - platform: state
+          entity_id: binary_sensor.bewegungsmelder_flur_keller_bewegung
+          to: "off"
+    - delay:
+        seconds: 15
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.flur_keller
+  mode: restart
+- id: "86492dad-5522-4acc-a7a8-f72ed17a16c4"
+  alias: Bewegung im Vorratskeller
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bewegungsmelder_vorratskeller_bewegung
+      to: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.vorratskeller
+    - wait_for_trigger:
+        - platform: state
+          entity_id: binary_sensor.bewegungsmelder_vorratskeller_bewegung
+          to: "off"
+    - delay:
+        seconds: 60
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.vorratskeller
+  mode: restart
+- id: "75d6d40b-0ece-47f4-99fe-cc681d02eb1a"
+  alias: Bewegung in der Waschküche
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bewegungsmelder_waschkuche_bewegung
+      to: "on"
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.waschkuche
+    - wait_for_trigger:
+        - platform: state
+          entity_id: binary_sensor.bewegungsmelder_waschkuche_bewegung
+          to: "off"
+    - delay:
+        seconds: 60
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.waschkuche
+  mode: restart
+- id: "fa841bc4-dad3-4506-a92a-fa7e653d4204"
+  alias: Bewegung im Windfang
+  trigger:
+    - platform: state
+      entity_id: binary_sensor.bewegungsmelder_windfang_bewegung
+      to: "on"
+  condition:
+    - or:
+        - condition: numeric_state
+          entity_id: sensor.bewegungsmelder_windfang_beleuchtungsstarke
+          below: 12
+        - condition: sun
+          after: sunset
+        - condition: sun
+          before: sunrise
+  action:
+    - service: light.turn_on
+      target:
+        entity_id:
+          - light.windfang
+    - wait_for_trigger:
+        - platform: state
+          entity_id: binary_sensor.bewegungsmelder_windfang_bewegung
+          to: "off"
+    - delay:
+        seconds: 15
+    - service: light.turn_off
+      target:
+        entity_id:
+          - light.windfang
+  mode: restart
+- id: "5d194104-8db9-4b6d-a37a-47920ce69e2f"
+  alias: Luftreiniger ausschalten
+  trigger:
+    - platform: numeric_state
+      entity_id:
+        - sensor.infeed_power
+      for:
+        minutes: 5
+      below: 1
+    - platform: time
+      at: "23:00:00"
+  condition:
+    - condition: state
+      entity_id: fan.luftreiniger
+      state: "on"
+  action:
+    - service: fan.turn_off
+      target:
+        entity_id:
+          - fan.luftreiniger
+  mode: single
+- id: "6994ef61-e815-41b7-8c06-25529c8e4970"
+  alias: Luftreiniger einschalten
+  trigger:
+    - platform: numeric_state
+      entity_id:
+        - sensor.infeed_power
+      for:
+        minutes: 1
+      above: 40
+    - platform: time
+      at: "11:00:00"
+  condition:
+    - condition: state
+      entity_id: fan.luftreiniger
+      state: "off"
+    - condition: time
+      after: "10:59:59"
+      before: "23:00:00"
+    - condition: numeric_state
+      entity_id: sensor.infeed_power
+      above: 40
+  action:
+    - service: fan.turn_on
+      target:
+        entity_id: fan.luftreiniger
+  mode: single
+- id: "530e46b4-f669-4124-8557-1dbcaadb5c6d"
+  alias: Stromeinspeisung
+  trigger:
+    - platform: numeric_state
+      entity_id: sensor.infeed_power
+      for:
+        minutes: 5
+      above: 50
+  action:
+    - service: script.durchsage
+      data:
+        announcement: true
+        notification: true
+        message: Wir schenken den Stadtwerken Strom!
+  mode: single
+  # After using the toothbrush in the morning, switch on the coffee machine for an hour.
+- id: "9b9f6a10-ba36-4ff4-a60c-1bb29d78f672"
+  alias: Kaffeemaschine am Morgen
+  trigger:
+    - platform: state
+      entity_id:
+        - sensor.smart_series_8000_4c24_toothbrush_state
+      to: running
+      for:
+        seconds: 30
+  condition:
+    - condition: time
+      after: 07:30:00
+      before: "15:00:00"
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.kuchenkleingerate
+    - delay:
+        hours: 1
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.kuchenkleingerate
+  mode: single
+- id: "1c02fe5b-4809-4b3b-b023-2abf624159fd"
+  alias: Niemand zuhause
+  trigger:
+    - platform: state
+      entity_id:
+        - zone.home
+      to: "0"
+      for:
+        minutes: 3
+      id: "Es wurde niemand mehr zuhause erkannt ich schalte nun alle Geräte ab"
+    - platform: event
+      event_type: hue_event
+      event_data:
+        id: lichtschalter_eingangstur_button
+        type: initial_press
+        subtype: 1
+      id: "Bis bald ich schalte nun alle Geräte ab"
+  action:
+    - service: script.durchsage
+      data:
+        announcement: true
+        notification: false
+        message: "{{ trigger.id }}"
+    - service: light.turn_off
+      data:
+        entity_id: all
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.arbeitsplatz_anna
+          - switch.hobbyzimmer
+          - switch.kuchenkleingerate
+          - switch.multimedia
+          - switch.nahplatz
+  mode: single
+- id: "ae92745c-752d-4703-a10a-237148be05b0"
+  alias: Willkommen Zuhause
+  trigger:
+    - platform: state
+      entity_id: person.anna
+      to: "home"
+      id: "Willkommen Zuhause Anna"
+    - platform: state
+      entity_id: person.cristina
+      to: "home"
+      id: "Willkommen Cristina"
+    - platform: state
+      entity_id: person.stefan
+      to: "home"
+      id: "Willkommen Zuhause Stefan"
+  action:
+    - service: script.durchsage
+      data:
+        announcement: true
+        notification: false
+        message: "{{ trigger.id }}"
+  mode: single
+- id: "fe5529ff-61fd-4f52-9cac-94194374719c"
+  alias: Annas Arbeitstag beginnt
+  trigger:
+    - platform: time
+      at: 08:25:00
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - tue
+        - wed
+        - thu
+        - fri
+    - condition: state
+      entity_id: person.anna
+      state: home
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.arbeitsplatz_anna
+  mode: single
+- id: "d72596b8-db9d-43c2-b7ed-887021e742fc"
+  alias: Stefans Arbeitstag beginnt
+  trigger:
+    - platform: time
+      at: 09:00:00
+  condition:
+    - condition: time
+      weekday:
+        - mon
+        - fri
+    - condition: state
+      entity_id: person.stefan
+      state: home
+  action:
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.arbeitsplatz_stefan
+  mode: single
